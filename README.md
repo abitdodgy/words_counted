@@ -88,21 +88,23 @@ Returns a hash of words and their lengths.
 
 ```ruby
 counter.word_lengths
-#=> {
-  "We"=>2,
-  "are"=>3,
-  "all"=>3,
-  "in"=>2,
-  "the"=>3,
-  "gutter"=>6,
-  "but"=>3,
-  "some"=>4,
-  "of"=>2,
-  "us"=>2,
-  "looking"=>7,
-  "at"=>2,
-  "stars"=>5
-}
+#
+#  {
+#    "We" => 2,
+#    "are" => 3,
+#    "all" => 3,
+#    "in" => 2,
+#    "the" => 3,
+#    "gutter" => 6,
+#    "but" => 3,
+#    "some" => 4,
+#    "of" => 2,
+#    "us" => 2,
+#    "looking" => 7,
+#    "at" => 2,
+#    "stars" => 5
+#  }
+#
 ```
 
 #### `.longest_word`
@@ -111,9 +113,19 @@ Returns a two dimensional array of the longest word and its length. In case ther
 
 ```ruby
 counter.longest_words
-#=> [
-      ["looking", 7]
-    ]
+#=>
+#  [
+#    ["looking", 7]
+#  ]
+```
+
+#### `.words`
+
+Returns an array of words resulting from the string passed into the initialize method.
+
+```ruby
+counter.words
+#=> ["We", "are", "all", "in", "the", "gutter", "but", "some", "of", "us", "are", "looking", "at", "the", "stars"]
 ```
 
 ## Filtering
@@ -134,17 +146,19 @@ counter = WordsCounted::Counter.new("How do you do?-you are well, I see.")
 #<WordsCounted::Counter:0x007fd494252518 @words=["How", "do", "you", "do", "-you", "are", "well", "I", "see"]>
 
 counter.word_occurrences
-#=> {
-  "how"=>1,
-  "do"=>2,
-  "you"=>1,
-  "-you"=>1, # WTF, mate!
-  "are"=>1,
-  "very"=>1,
-  "well"=>1,
-  "i"=>1,
-  "see"=>1
-}
+#
+#  {
+#    "how" => 1,
+#    "do" => 2,
+#    "you" => 1,
+#    "-you" => 1, # WTF, mate!
+#    "are" => 1,
+#    "very" => 1,
+#    "well" => 1,
+#    "i" => 1,
+#    "see" => 1
+#  }
+#
 ```
 
 In this example, `-you` and `you` are counted as separate words. Writers should use the correct dash element, but this is not always the case.
