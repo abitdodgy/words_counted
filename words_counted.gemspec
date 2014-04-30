@@ -1,6 +1,7 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
 require 'words_counted/version'
 
 Gem::Specification.new do |spec|
@@ -10,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["husseini.mel@gmail.com"]
   spec.description   = %q{A Ruby word counter with helpful utility methods.}
   spec.summary       = %q{See README.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/abitdodgy/words_counted"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
