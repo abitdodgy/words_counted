@@ -1,6 +1,6 @@
 module WordsCounted
   class Counter
-    # @!attribute [Array] an array of words resulting for the string to act on.
+    # @!words [Array] an array of words resulting from the string passed to the initializer.
     attr_reader :words
 
     # This is the criteria for defining words.
