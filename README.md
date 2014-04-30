@@ -171,6 +171,53 @@ In this example, `-you` and `you` are counted as separate words. Writers should 
 
 Originally I wrote this program for a code challenge. My initial implementation was decent, but it could have been better. Thanks to [Dave Yarwood](http://codereview.stackexchange.com/a/47515/1563) for helping me improve my code. Some of this code is based on his recommendations. You can find the original implementation as well as the code review on [Code Review](http://codereview.stackexchange.com/questions/46105/a-ruby-string-analyser).
 
+## To do
+
+1. Add paragraph counter.
+2. Add word density in %.
+3. Add ability to open files or URLs.
+4. A character counter, with spaces, and without spaces.
+5. A sentence counter.
+6. Average words in a sentence.
+7. Average sentence chars.
+8. Plays nicely with diacritics (utf and unicode characters): "São Paulo" is treated as `["São", "Paulo"]` and not `["S", "", "o", "Paulo"]`
+9. Pass in a custom regex object using dependency injection.
+
+#### Ability to open files or urls
+
+Maybe I can some class methods to open the file and init the counter class.
+
+```ruby
+def self.count_from_url
+  new # open url and send string here after removing html
+end
+
+def self.from_file
+  new # open file and send string here.
+end
+```
+
+#### Passing in custom regex
+
+Allow the user to pass in their own regex object to use to split the words. For example:
+
+```ruby
+WordsCounter::Counter.new("I am Mr. 123!", criteria = Regex.new(/[^\p{Alnum}\-']+/))
+
+class Counter
+  def initialize(string, filter = String.new, criteria = nil)
+    @words = string.split(criteria).reject { |word| filter.split.include? word.downcase }
+    @criteria = criteria
+  end
+
+  private
+
+  def criteria
+    @criteria || WORD_REGEX
+  end
+end
+```
+
 ## Contributing
 
 1. Fork it
