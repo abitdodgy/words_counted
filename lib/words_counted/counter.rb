@@ -68,6 +68,8 @@ module WordsCounted
     #
     # {http://codereview.stackexchange.com/a/47515/1563 See here}.
     #
+    # @param entries [Hash] a hash of entries to analyse
+    #
     def highest_ranking(entries)
       entries.group_by { |word, occurrence| occurrence }.sort.last.last
     end
