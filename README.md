@@ -11,6 +11,7 @@ This Ruby gem is a word counter that includes some handy utility methods. It let
 5. Get the longest word(s) and its length.
 6. Ability to filter out words from the count. Useful if you don't want to count `a`, `the`, etc...
 7. Filters special characters but respects hyphens and apostrophes.
+8. Plays nicely with diacritics (utf and unicode characters): "São Paulo" is treated as `["São", "Paulo"]` and not `["S", "", "o", "Paulo"]`
 
 See usage instructions for details on each feature.
 
@@ -180,8 +181,7 @@ Originally I wrote this program for a code challenge. My initial implementation 
 5. A sentence counter.
 6. Average words in a sentence.
 7. Average sentence chars.
-8. Plays nicely with diacritics (utf and unicode characters): "São Paulo" is treated as `["São", "Paulo"]` and not `["S", "", "o", "Paulo"]`
-9. Pass in a custom regex object using dependency injection.
+8. Pass in a custom regex object using dependency injection.
 
 #### Ability to open files or urls
 
