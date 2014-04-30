@@ -52,21 +52,23 @@ Returns a hash map of words and their number of occurrences. Uppercase and lower
 
 ```ruby
 counter.word_occurrences
-#=> {
-  "we"=>1,
-  "are"=>2,
-  "all"=>1,
-  "in"=>1,
-  "the"=>2,
-  "gutter"=>1,
-  "but"=>1,
-  "some"=>1,
-  "of"=>1,
-  "us"=>1,
-  "looking"=>1,
-  "at"=>1,
-  "stars"=>1
-}
+#
+#  {
+#    "we" => 1,
+#    "are" => 2,
+#    "all" => 1,
+#    "in" => 1,
+#    "the" => 2,
+#    "gutter" => 1,
+#    "but" => 1,
+#    "some" => 1,
+#    "of" => 1,
+#    "us" => 1,
+#    "looking" => 1,
+#    "at" => 1,
+#    "stars" => 1
+#  }
+#
 ```
 
 #### `.most_occurring_words`
@@ -75,11 +77,12 @@ Returns a two dimensional array of the most occurring word and its number of occ
 
 ```ruby
 counter.most_occurring_words
-#=>
-  [
-    ["are", 2],
-    ["the", 2]
-  ]
+#
+#  [
+#    ["are", 2],
+#    ["the", 2]
+#  ]
+#
 ```
 
 #### `.word_lengths`
@@ -113,10 +116,11 @@ Returns a two dimensional array of the longest word and its length. In case ther
 
 ```ruby
 counter.longest_words
-#=>
+#
 #  [
 #    ["looking", 7]
 #  ]
+#
 ```
 
 #### `.words`
