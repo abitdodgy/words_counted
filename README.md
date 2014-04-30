@@ -1,4 +1,4 @@
-# WordsCounted
+# Words Counted
 
 This Ruby gem is a word counter that includes some handy utility methods.
 
@@ -33,7 +33,9 @@ Or install it yourself as:
 Create an instance of `Counter` and pass in a string and an optional filter.
 
 ```ruby
-counter = WordsCounted::Counter.new("We are all in the gutter, but some of us are looking at the stars.")
+counter = WordsCounted::Counter.new(
+	"We are all in the gutter, but some of us are looking at the stars."
+)
 ```
 
 ### `.word_count`
@@ -73,7 +75,7 @@ Returns a two dimensional array of the longest word and its length. In case ther
 
 ## Filtering
 
-You can pass in a space-delimited wordlist to filter words that you don't want to count. Filter words should be lowercase. The filter will remove both uppercase and lowercase variants of the word.
+You can pass in a space-delimited word list to filter words that you don't want to count. Filter words should be lowercase. The filter will remove both uppercase and lowercase variants of the word.
 
 ```ruby
 WordsCounted::Counter.new("That was magnificent, Trevor.", "that was")
@@ -82,7 +84,7 @@ WordsCounted::Counter.new("That was magnificent, Trevor.", "that was")
 
 ## About
 
-Originally I wrote this program for a code challenge. My initial implementation was decent, but it could have been better. Thanks to [Dave Yarwood](http://codereview.stackexchange.com/a/47515/1563) for helping me improve my code. Some of this code is based on his recommendations. You can find the original implementation as well sa the code review on [Code Review](http://codereview.stackexchange.com/questions/46105/a-ruby-string-analyser).
+Originally I wrote this program for a code challenge. My initial implementation was decent, but it could have been better. Thanks to [Dave Yarwood](http://codereview.stackexchange.com/a/47515/1563) for helping me improve my code. Some of this code is based on his recommendations. You can find the original implementation as well as the code review on [Code Review](http://codereview.stackexchange.com/questions/46105/a-ruby-string-analyser).
 
 ## Contributing
 
