@@ -1,4 +1,5 @@
 require "words_counted/version"
+require "words_counted/counter"
 
 begin
   require "pry"

@@ -1,6 +1,6 @@
 # WordsCounted
 
-TODO: Write a gem description
+This gem counts words and presents the data.
 
 ## Installation
 
