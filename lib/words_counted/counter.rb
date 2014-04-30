@@ -8,7 +8,7 @@ module WordsCounted
       @words = string.split(WORD_REGEX).reject { |word| filter.split.include? word.downcase }
     end
 
-    def count
+    def word_count
       words.size
     end
 

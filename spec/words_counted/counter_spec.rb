@@ -35,11 +35,11 @@ module WordsCounted
       end
     end
 
-    describe ".count" do
+    describe ".word_count" do
       let(:counter) { Counter.new("In that case I'll take measures to secure you, woman!") }
 
       it "returns the correct word count" do
-        expect(counter.count).to eq(10)
+        expect(counter.word_count).to eq(10)
       end
     end
 
