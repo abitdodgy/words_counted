@@ -240,7 +240,7 @@ end
 
 #### Isn't it better to write this in JavaScript?
 
-![http://stream1.gifsoup.com/view3/1290449/picard-facepalm-o.gif][Picard face palm]
+![Picard face palm](http://stream1.gifsoup.com/view3/1290449/picard-facepalm-o.gif "Picard face palm")
 
 ## About
 
