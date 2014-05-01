@@ -56,7 +56,9 @@ module WordsCounted
     def initialize(string, options = {})
       @options = options
 
-      @words = string.scan(regex).reject { |word| filter.split.include? word.downcase }
+      @words = string.scan(regex).reject do |word|
+        filter.split.include? word.downcase
+      end
 
       @word_occurrences = words.each_with_object(Hash.new(0)) do |word, result|
         result[word.downcase] += 1
@@ -101,8 +103,8 @@ module WordsCounted
     #
     def word_density
       word_occurrences.each_with_object({}) do |(word, occ), hash|
-        hash[word] = percent_of_n(occ)
-      end.sort_by { |_, v| v }.reverse
+        hash[word] = percent_of(occ)
+      end.sort_by { |_, value| value }.reverse
     end
 
     private
@@ -116,7 +118,7 @@ module WordsCounted
     # {http://codereview.stackexchange.com/a/47515/1563 See here}.
     #
     def highest_ranking(entries)
-      entries.group_by { |word, occurrence| occurrence }.sort.last.last
+      entries.group_by { |word, value| value }.sort.last.last
     end
 
     # Calculates the percentege of a word.
@@ -124,8 +126,8 @@ module WordsCounted
     # @param n [Integer] the divisor.
     # @returns [Float] a percentege of n based on {#word_count} rounded to two decimal places.
     #
-    def percent_of_n(n)
-      ((n.to_f / word_count.to_f) * 100.0).round(2)
+    def percent_of(n)
+      (n.to_f / word_count.to_f * 100.0).round(2)
     end
 
     def regex
