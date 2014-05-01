@@ -221,7 +221,6 @@ The default criteria does not count numbers as words.
 4. A sentence counter.
 5. Average words in a sentence.
 6. Average sentence chars.
-7. Pass in a custom regex object using dependency injection.
 
 #### Ability to open files or urls
 
