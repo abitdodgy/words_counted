@@ -164,7 +164,9 @@ counter.word_density
 You can pass in a space-delimited word list to filter words that you don't want to count. Filter words should be *lowercase*. The filter will remove both uppercase and lowercase variants of the word.
 
 ```ruby
-WordsCounted::Counter.new("Magnificent! That was magnificent, Trevor.", filter: "was magnificent")
+WordsCounted::Counter.new(
+  "Magnificent! That was magnificent, Trevor.", filter: "was magnificent"
+)
 counter.words
 #=> ["That", "Trevor"]
 ```
@@ -182,7 +184,7 @@ If you prefer, you can pass in your own criteria in the form of a Ruby regexp to
 ```ruby
 counter = WordsCounted::Counter.new("I am 007.", regex: /[^\p{Alnum}\-']+/)
 counter.words
- => ["I", "am", "007"]
+#=> ["I", "am", "007"]
 ```
 
 ## Gotchas
@@ -211,7 +213,9 @@ counter.word_occurrences
 
 In this example, `-you` and `you` are counted as separate words. Writers should use the correct dash element, but this is not always the case.
 
-The default criteria does not count numbers as words.
+Another gotcha is that the default criteria does not count numbers as words.
+
+Remember that you can pass in your own regexp if the default solution does not fit your needs.
 
 ## To do
 
