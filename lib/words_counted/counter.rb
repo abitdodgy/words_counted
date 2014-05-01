@@ -12,7 +12,7 @@ module WordsCounted
     #
     # Words are alpha characters and can include hyphens and apostrophes.
     #
-    WORD_REGEX = /[^\p{Alpha}\-']+/
+    WORD_REGEX = /[\p{Alpha}\-']+/
 
     # Initializes an instance of Counter and splits a given string into an array of words.
     #
@@ -56,7 +56,7 @@ module WordsCounted
     def initialize(string, options = {})
       @options = options
 
-      @words = string.split(regex).reject { |word| filter.split.include? word.downcase }
+      @words = string.scan(regex).reject { |word| filter.split.include? word.downcase }
 
       @word_occurrences = words.each_with_object(Hash.new(0)) do |word, result|
         result[word.downcase] += 1
@@ -100,7 +100,9 @@ module WordsCounted
     # @returns [Hash] a hash map of words as keys and their density as values in percent.
     #
     def word_density
-      word_occurrences.each_with_object({}) { |(word, occ), hash| hash[word] = percent_of_n(occ) }.sort_by { |_, v| v }.reverse
+      word_occurrences.each_with_object({}) do |(word, occ), hash|
+        hash[word] = percent_of_n(occ)
+      end.sort_by { |_, v| v }.reverse
     end
 
     private

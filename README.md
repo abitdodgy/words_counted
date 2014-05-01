@@ -176,13 +176,13 @@ counter.words
 Defining words is tricky business. Out of the box, the default regexp accounts for letters, hyphenated words, and apostrophes. This means `twenty-one` is treated as one word. So is `Mohamad's`.
 
 ```ruby
-/[^\p{Alpha}\-']+/
+/[\p{Alpha}\-']+/
 ```
 
 If you prefer, you can pass in your own criteria in the form of a Ruby regexp to split your string as desired. For example, if you wanted to count numbers as words, you could pass the following regex instead of the default one.
 
 ```ruby
-counter = WordsCounted::Counter.new("I am 007.", regex: /[^\p{Alnum}\-']+/)
+counter = WordsCounted::Counter.new("I am 007.", regex: /[\p{Alnum}\-']+/)
 counter.words
 #=> ["I", "am", "007"]
 ```
@@ -244,7 +244,7 @@ end
 
 #### Isn't it better to write this in JavaScript?
 
-![Picard face palm](http://stream1.gifsoup.com/view3/1290449/picard-facepalm-o.gif "Picard face palm")
+![Picard face-palm](http://stream1.gifsoup.com/view3/1290449/picard-facepalm-o.gif "Picard face-palm")
 
 ## About
 

@@ -5,6 +5,10 @@ module WordsCounted
     let(:counter) { Counter.new("We are all in the gutter, but some of us are looking at the stars.") }
 
     describe "#initialize" do
+      it "sets @options" do
+        expect(counter.instance_variables).to include(:@options)
+      end
+
       it "sets @words" do
         expect(counter.instance_variables).to include(:@words)
       end
@@ -48,7 +52,7 @@ module WordsCounted
       end
 
       it "splits words based on regex" do
-        counter = Counter.new("I am 007.", regex: /[^\p{Alnum}\-']+/)
+        counter = Counter.new("I am 007.", regex: /[\p{Alnum}\-']+/)
         expect(counter.words).to eq(["I", "am", "007"])
       end
     end
