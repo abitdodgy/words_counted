@@ -1,6 +1,6 @@
 # Words Counted
 
-This Ruby gem is a word counter that includes some handy utility methods. It lets you send in a string of text and count the number of words, get the words sorted by number occurrences, get the highest occurring words, and few more things.
+Words Counted is a Ruby word counter and string analyser. It includes some handy utility methods that go beyond word counting. You can use this gem to get word desnity, words and their number of occurrences, the highest occurring words, and few more things. You can also pass in your custom criteria for splitting strings in the form of a custom regexp.
 
 ### Features
 
@@ -12,6 +12,7 @@ This Ruby gem is a word counter that includes some handy utility methods. It let
 6. Ability to filter out words from the count. Useful if you don't want to count `a`, `the`, etc...
 7. Filters special characters but respects hyphens and apostrophes.
 8. Plays nicely with diacritics (utf and unicode characters): "São Paulo" is treated as `["São", "Paulo"]` and not `["S", "", "o", "Paulo"]`
+9. Customisable criteria. Pass in your own regexp rules to split strings if you prefer.
 
 See usage instructions for details on each feature.
 
@@ -133,13 +134,55 @@ counter.words
 #=> ["We", "are", "all", "in", "the", "gutter", "but", "some", "of", "us", "are", "looking", "at", "the", "stars"]
 ```
 
+#### `.word_density`
+
+Returns a two-dimentional array of words and their density.
+
+```ruby
+counter.word_density
+#
+#  [
+#    ["are", 13.33],
+#    ["the", 13.33],
+#    ["but", 6.67],
+#    ["us", 6.67],
+#    ["of", 6.67],
+#    ["some", 6.67],
+#    ["looking", 6.67],
+#    ["gutter", 6.67],
+#    ["at", 6.67],
+#    ["in", 6.67],
+#    ["all", 6.67],
+#    ["stars", 6.67],
+#    ["we", 6.67]
+#  ]
+#
+```
+
 ## Filtering
 
 You can pass in a space-delimited word list to filter words that you don't want to count. Filter words should be *lowercase*. The filter will remove both uppercase and lowercase variants of the word.
 
 ```ruby
-WordsCounted::Counter.new("Magnificent! That was magnificent, Trevor.", "was magnificent")
-#<WordsCounted::Counter:0x007fd4949f99d8 @words=["That", "Trevor"]>
+WordsCounted::Counter.new("Magnificent! That was magnificent, Trevor.", filter: "was magnificent")
+counter.words
+#=> ["That", "Trevor"]
+```
+
+## Passing in a Custom Regexp
+
+Defining words is tricky business. Out of the box, the default regexp accounts for letters, hyphenated words, and apostrophes. This means `twenty-one` is treated as one word. So is `Mohamad's`.
+
+```ruby
+/[^\p{Alpha}\-']+/
+```
+
+If you prefer, you can pass in your own criteria in the form of a Ruby regexp to split your string as desired. For example, if you wanted to count numbers as words, you could pass the following regex instead of the default one.
+
+```ruby
+counter = WordsCounted::Counter.new("I am 007.", regex: /[^\p{Alnum}\-']+/)
+counter.words
+ => ["I", "am", "007"]
 ```
 
 ## Gotchas
@@ -168,20 +211,17 @@ counter.word_occurrences
 
 In this example, `-you` and `you` are counted as separate words. Writers should use the correct dash element, but this is not always the case.
 
-## About
-
-Originally I wrote this program for a code challenge. My initial implementation was decent, but it could have been better. Thanks to [Dave Yarwood](http://codereview.stackexchange.com/a/47515/1563) for helping me improve my code. Some of this code is based on his recommendations. You can find the original implementation as well as the code review on [Code Review](http://codereview.stackexchange.com/questions/46105/a-ruby-string-analyser).
+The default criteria does not count numbers as words.
 
 ## To do
 
 1. Add paragraph counter.
-2. Add word density in %.
-3. Add ability to open files or URLs.
-4. A character counter, with spaces, and without spaces.
-5. A sentence counter.
-6. Average words in a sentence.
-7. Average sentence chars.
-8. Pass in a custom regex object using dependency injection.
+2. Add ability to open files or URLs.
+3. A character counter, with spaces, and without spaces.
+4. A sentence counter.
+5. Average words in a sentence.
+6. Average sentence chars.
+7. Pass in a custom regex object using dependency injection.
 
 #### Ability to open files or urls
 
@@ -197,26 +237,15 @@ def self.from_file
 end
 ```
 
-#### Passing in custom regex
+## But wait... wait a minute...
 
-Allow the user to pass in their own regex object to use to split the words. For example:
+#### Isn't it better to write this in JavaScript?
 
-```ruby
-WordsCounter::Counter.new("I am Mr. 123!", criteria = Regex.new(/[^\p{Alnum}\-']+/))
+![http://stream1.gifsoup.com/view3/1290449/picard-facepalm-o.gif][Picard face palm]
 
-class Counter
-  def initialize(string, filter = String.new, criteria = nil)
-    @words = string.split(criteria).reject { |word| filter.split.include? word.downcase }
-    @criteria = criteria
-  end
+## About
 
-  private
-
-  def criteria
-    @criteria || WORD_REGEX
-  end
-end
-```
+Originally I wrote this program for a code challenge. My initial implementation was decent, but it could have been better. Thanks to [Dave Yarwood](http://codereview.stackexchange.com/a/47515/1563) for helping me improve my code. Some of this code is based on his recommendations. You can find the original implementation as well as the code review on [Code Review](http://codereview.stackexchange.com/questions/46105/a-ruby-string-analyser).
 
 ## Contributing
 

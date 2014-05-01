@@ -2,10 +2,23 @@ require "spec_helper"
 
 module WordsCounted
   describe Counter do
+    let(:counter) { Counter.new("We are all in the gutter, but some of us are looking at the stars.") }
+
+    describe "#initialize" do
+      it "sets @words" do
+        expect(counter.instance_variables).to include(:@words)
+      end
+
+      it "sets @word_occurrences" do
+        expect(counter.instance_variables).to include(:@word_occurrences)
+      end
+
+      it "sets @word_lengths" do
+        expect(counter.instance_variables).to include(:@word_lengths)
+      end
+    end
 
     describe ".words" do
-      let(:counter) { Counter.new("We are all in the gutter, but some of us are looking at the stars.") }
-
       it "returns an array" do
         expect(counter.words).to be_a(Array)
       end
@@ -30,64 +43,74 @@ module WordsCounted
       end
 
       it "filters words" do
-        counter = Counter.new("That was magnificent, Trevor.", "magnificent")
+        counter = Counter.new("That was magnificent, Trevor.", filter: "magnificent")
         expect(counter.words).to eq(%w[That was Trevor])
+      end
+
+      it "splits words based on regex" do
+        counter = Counter.new("I am 007.", regex: /[^\p{Alnum}\-']+/)
+        expect(counter.words).to eq(["I", "am", "007"])
       end
     end
 
     describe ".word_count" do
-      let(:counter) { Counter.new("In that case I'll take measures to secure you, woman!") }
-
       it "returns the correct word count" do
-        expect(counter.word_count).to eq(10)
+        expect(counter.word_count).to eq(15)
       end
     end
 
     describe ".word_occurrences" do
-      let(:counter) { Counter.new("Bad, bad, piggy!") }
-
       it "returns a hash" do
         expect(counter.word_occurrences).to be_a(Hash)
       end
 
       it "treats capitalized words as the same word" do
+        counter = Counter.new("Bad, bad, piggy!")
         expect(counter.word_occurrences).to eq({ "bad" => 2, "piggy" => 1 })
       end
     end
 
     describe ".most_occurring_words" do
-      let(:counter) { Counter.new("One should always be in love. That is the reason one should never marry.") }
-
       it "returns an array" do
         expect(counter.most_occurring_words).to be_a(Array)
       end
 
       it "returns highest occuring words" do
-        expect(counter.most_occurring_words).to eq([["one", 2],["should", 2]])
+        counter = Counter.new("Orange orange Apple apple banana")
+        expect(counter.most_occurring_words).to eq([["orange", 2],["apple", 2]])
       end
     end
 
     describe '.word_lengths' do
-      let(:counter) { Counter.new("One two three.") }
-
       it "returns a hash" do
         expect(counter.word_lengths).to be_a(Hash)
       end
 
       it "returns a hash of word lengths" do
+        counter = Counter.new("One two three.")
         expect(counter.word_lengths).to eq({ "One" => 3, "two" => 3, "three" => 5 })
       end
     end
 
     describe ".longest_words" do
-      let(:counter) { Counter.new("Those whom the gods love grow young.") }
-
       it "returns an array" do
         expect(counter.longest_words).to be_a(Array)
       end
 
       it "returns the longest words" do
+        counter = Counter.new("Those whom the gods love grow young.")
         expect(counter.longest_words).to eq([["Those", 5],["young", 5]])
+      end
+    end
+
+    describe ".word_density" do
+      it "returns a hash" do
+        expect(counter.word_density).to be_a(Array)
+      end
+
+      it "returns words and their density in percent" do
+        counter = Counter.new("His name was major, I mean, Major Major Major Major.")
+        expect(counter.word_density).to eq([["major", 50.0], ["mean", 10.0], ["i", 10.0], ["was", 10.0], ["name", 10.0], ["his", 10.0]])
       end
     end
   end

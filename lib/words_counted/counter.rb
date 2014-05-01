@@ -1,10 +1,12 @@
 module WordsCounted
 
-  # Represents a counter object.
+  # Represents a Counter object.
   #
   class Counter
     # @!words [Array] an array of words resulting from the string passed to the initializer.
-    attr_reader :words
+    # @!word_occurrences [Hash] an hash of words as keys and their occurrences as values.
+    # @!word_lengths [Hash] an hash of words as keys and their lengths as values.
+    attr_reader :words, :word_occurrences, :word_lengths
 
     # This is the criteria for defining words.
     #
@@ -14,14 +16,55 @@ module WordsCounted
 
     # Initializes an instance of Counter and splits a given string into an array of words.
     #
+    # ## @words
+    # This is the array of words that results from the string passed in. For example:
+    #
     #    Counter.new("Bad, bad, piggy!")
     #    => #<WordsCounted::Counter:0x007fd49429bfb0 @words=["Bad", "bad", "piggy"]>
     #
     # @param string [String] the string to act on.
-    # @param filter [String] a string of words to filter from the string to act on.
+    # @param options [Hash] a hash of options that includes `filter` and `regex`
     #
-    def initialize(string, filter = String.new)
-      @words = string.split(WORD_REGEX).reject { |word| filter.split.include? word.downcase }
+    #   ## `filter`
+    #   This a list of words to filter from the string. Useful if you want to remove *a*, **you**, and other common words.
+    #   Any words included in the filter must be **lowercase**.
+    #   defaults to an empty string
+    #
+    #   ## `regex`
+    #   The criteria used to split a string. It defaults to `/[^\p{Alpha}\-']+/`.
+    #
+    #
+    # @word_occurrences
+    # This is a hash of words and their occurrences. Occurrences count is not case sensitive.
+    #
+    # ## Example
+    #
+    #    "Hello hello" #=> { "hello" => 2 }
+    #
+    # @return [Hash] a hash map of words as keys and their occurrences as values.
+    #
+    #
+    # ## @word_lengths
+    # This is a hash of words and their lengths.
+    #
+    # ## Example
+    #
+    #    "Hello sir" #=> { "hello" => 5, "sir" => 3 }
+    #
+    # @return [Hash] a hash map of words as keys and their lengths as values.
+    #
+    def initialize(string, options = {})
+      @options = options
+
+      @words = string.split(regex).reject { |word| filter.split.include? word.downcase }
+
+      @word_occurrences = words.each_with_object(Hash.new(0)) do |word, result|
+        result[word.downcase] += 1
+      end
+
+      @word_lengths = words.each_with_object({}) do |word, result|
+        result[word] ||= word.length
+      end
     end
 
     # Returns the total word count.
@@ -30,31 +73,6 @@ module WordsCounted
     #
     def word_count
       words.size
-    end
-
-    # Returns a hash of words and their occurrences.
-    # Occurrences count is not case sensitive:
-    #
-    # ## Example
-    #
-    #    "Hello hello" #=> { "hello" => 2 }
-    #
-    # @return [Hash] a hash map of words as keys and their occurrences as values.
-    #
-    def word_occurrences
-      @occurrences ||= words.each_with_object(Hash.new(0)) { |word, result| result[word.downcase] += 1 }
-    end
-
-    # Returns a hash of words and their lengths.
-    #
-    # ## Example
-    #
-    #    "Hello sir" #=> { "hello" => 5, "sir" => 3 }
-    #
-    # @return [Hash] a hash map of words as keys and their lengths as values.
-    #
-    def word_lengths
-      @lengths ||= words.each_with_object({}) { |word, result| result[word] ||= word.length }
     end
 
     # Returns a  two dimensional array of the most occuring word(s)
@@ -77,6 +95,14 @@ module WordsCounted
       highest_ranking word_lengths
     end
 
+    # Returns a hash of word and their word density in percent.
+    #
+    # @returns [Hash] a hash map of words as keys and their density as values in percent.
+    #
+    def word_density
+      word_occurrences.each_with_object({}) { |(word, occ), hash| hash[word] = percent_of_n(occ) }.sort_by { |_, v| v }.reverse
+    end
+
     private
 
     # Takes a hashmap of the form {"foo" => 1, "bar" => 2} and returns an array
@@ -89,6 +115,23 @@ module WordsCounted
     #
     def highest_ranking(entries)
       entries.group_by { |word, occurrence| occurrence }.sort.last.last
+    end
+
+    # Calculates the percentege of a word.
+    #
+    # @param n [Integer] the divisor.
+    # @returns [Float] a percentege of n based on {#word_count} rounded to two decimal places.
+    #
+    def percent_of_n(n)
+      ((n.to_f / word_count.to_f) * 100.0).round(2)
+    end
+
+    def regex
+      @options[:regex] || WORD_REGEX
+    end
+
+    def filter
+      @options[:filter] || String.new
     end
   end
 end
