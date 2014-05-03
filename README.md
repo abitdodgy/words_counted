@@ -165,6 +165,33 @@ counter.word_density
 #
 ```
 
+#### `.char_count`
+
+Returns the string's character count.
+
+```ruby
+counter.char_count
+#=> 76
+```
+
+#### `.average_chars_per_word`
+
+Returns the average character count per word.
+
+```ruby
+counter.average_chars_per_word
+#=> 4
+```
+
+#### `.unique_word_count`
+
+Returns the count of unique words in the string.
+
+```ruby
+counter.unique_word_count
+#=> 13
+```
+
 ## Filtering
 
 You can pass in a *space-delimited* word list to filter words that you don't want to count. The filter will remove both uppercase and lowercase variants of the word.
