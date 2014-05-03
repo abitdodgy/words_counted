@@ -6,7 +6,8 @@ module WordsCounted
     # @!words [Array] an array of words resulting from the string passed to the initializer.
     # @!word_occurrences [Hash] an hash of words as keys and their occurrences as values.
     # @!word_lengths [Hash] an hash of words as keys and their lengths as values.
-    attr_reader :words, :word_occurrences, :word_lengths
+    # @!char_count [Integer] total char count from `chars` array size.
+    attr_reader :words, :word_occurrences, :word_lengths, :char_count
 
     # This is the criteria for defining words.
     #
@@ -14,47 +15,22 @@ module WordsCounted
     #
     WORD_REGEX = /[\p{Alpha}\-']+/
 
-    # Initializes an instance of Counter and splits a given string into an array of words.
-    #
-    # ## @words
-    # This is the array of words that results from the string passed in. For example:
-    #
-    #    Counter.new("Bad, bad, piggy!")
-    #    => #<WordsCounted::Counter:0x007fd49429bfb0 @words=["Bad", "bad", "piggy"]>
+    # Initializes an instance of Counter and creates a number of instance variables.
     #
     # @param string [String] the string to act on.
     # @param options [Hash] a hash of options that includes `filter` and `regex`
     #
-    #   ## `filter`
-    #   This a list of words to filter from the string. Useful if you want to remove *a*, **you**, and other common words.
-    #   Any words included in the filter must be **lowercase**.
-    #   defaults to an empty string
+    #     `filter`
+    #     # This a list of words to filter from the string. Useful if you want to remove *a*, **you**, and other common words.
+    #     # Any words included in the filter must be **lowercase**. It defaults to an empty string.
     #
-    #   ## `regex`
-    #   The criteria used to split a string. It defaults to `/[^\p{Alpha}\-']+/`.
-    #
-    #
-    # @word_occurrences
-    # This is a hash of words and their occurrences. Occurrences count is not case sensitive.
-    #
-    # ## Example
-    #
-    #    "Hello hello" #=> { "hello" => 2 }
-    #
-    # @return [Hash] a hash map of words as keys and their occurrences as values.
-    #
-    #
-    # ## @word_lengths
-    # This is a hash of words and their lengths.
-    #
-    # ## Example
-    #
-    #    "Hello sir" #=> { "hello" => 5, "sir" => 3 }
-    #
-    # @return [Hash] a hash map of words as keys and their lengths as values.
+    #     `regex`
+    #     # The criteria used to split a string. It defaults to `/[\p{Alpha}\-']+/`.
     #
     def initialize(string, options = {})
       @options = options
+
+      @char_count = string.length
 
       @words = string.scan(regex).reject do |word|
         filter.split.include? word.downcase
@@ -69,18 +45,18 @@ module WordsCounted
       end
     end
 
-    # Returns the total word count.
-    #
     # @return [Integer] total word count from `words` array size.
-    #
     def word_count
       words.size
     end
 
-    # Returns a  two dimensional array of the most occuring word(s)
-    # and its number of occurrences.
-    #
-    # In the event of a tie, all tied words are returned.
+    # @return [Float] average chars per word.
+    def average_chars_per_word
+      (char_count / word_count).round(2)
+    end
+
+    # Returns a  two dimensional array of the most occuring word(s) and its
+    # number of occurrences. In the event of a tie, all tied words are returned.
     #
     # @return [Array] see {#highest_ranking}
     #
@@ -109,8 +85,8 @@ module WordsCounted
 
     private
 
-    # Takes a hashmap of the form {"foo" => 1, "bar" => 2} and returns an array
-    # containing the entries (as an array) with the highest number as a value.
+    # Takes a hashmap of the form `{'a' => 1, 'b' => 2}` and returns a two dimentional array
+    # with the inner array containing a the entry with the highest value and the value.
     #
     # @param entries [Hash] a hash of entries to analyse
     # @return [Array] a two dimentional array where each consists of a word its rank
@@ -130,10 +106,18 @@ module WordsCounted
       (n.to_f / word_count.to_f * 100.0).round(2)
     end
 
+    # Gets the regexp option.
+    #
+    # @return [Regexp] the regexp to use for spliting the string.
+    #
     def regex
       @options[:regex] || WORD_REGEX
     end
 
+    # Gets the filter option.
+    #
+    # @return [String] the string to filter by.
+    #
     def filter
       @options[:filter] || String.new
     end
