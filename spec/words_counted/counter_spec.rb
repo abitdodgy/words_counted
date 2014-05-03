@@ -50,8 +50,18 @@ module WordsCounted
         expect(counter.words).to eq(%w[Bust 'em Them be Jim's bastards'])
       end
 
+      it "does not split on unicode chars" do
+        counter = Counter.new("São Paulo")
+        expect(counter.words).to eq(%w[São Paulo])
+      end
+
       it "filters words" do
         counter = Counter.new("That was magnificent, Trevor.", filter: "magnificent")
+        expect(counter.words).to eq(%w[That was Trevor])
+      end
+
+      it "filters words when passed in in uppercase" do
+        counter = Counter.new("That was magnificent, Trevor.", filter: "Magnificent")
         expect(counter.words).to eq(%w[That was Trevor])
       end
 
@@ -131,6 +141,12 @@ module WordsCounted
     describe ".average_chars_per_word" do
       it "returns the average number of chars per word" do
         expect(counter.average_chars_per_word).to eq(4)
+      end
+    end
+
+    describe ".unique_word_count" do
+      it "returns the number of unique words" do
+        expect(counter.unique_word_count).to eq(13)
       end
     end
   end

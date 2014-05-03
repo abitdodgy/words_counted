@@ -1,6 +1,8 @@
 # Words Counted
 
-Words Counted is a Ruby word counter and string analyser. It includes some handy utility methods that go beyond word counting. You can use this gem to get word desnity, words and their number of occurrences, the highest occurring words, and few more things. You can also pass in your custom criteria for splitting strings in the form of a custom regexp.
+Words Counted is a Ruby word (or anything--see custom regexp) counter and string analyser. It includes some handy utility methods that go beyond word counting. You can use this gem to get word desnity, words and their number of occurrences, the highest occurring words, and few more things.
+
+You can also pass in your custom criteria for splitting strings in the form of a custom regexp, which affords you a great deal of flexibility, whether you want to count words, numbers, or special characters.
 
 ### Features
 
@@ -13,6 +15,8 @@ Words Counted is a Ruby word counter and string analyser. It includes some handy
 7. Filters special characters but respects hyphens and apostrophes.
 8. Plays nicely with diacritics (utf and unicode characters): "São Paulo" is treated as `["São", "Paulo"]` and not `["S", "", "o", "Paulo"]`
 9. Customisable criteria. Pass in your own regexp rules to split strings if you prefer.
+10. Get `char_count` and `average_chars_per_word`.
+11. Get unique word count.
 
 See usage instructions for details on each feature.
 
@@ -32,7 +36,7 @@ Or install it yourself as:
 
 ## Usage
 
-Create an instance of `Counter` and pass in a string and an optional filter string.
+Create an instance of `Counter` and pass in a string and an optional filter and/or regexp.
 
 ```ruby
 counter = WordsCounted::Counter.new(
@@ -40,9 +44,11 @@ counter = WordsCounted::Counter.new(
 )
 ```
 
+### API
+
 #### `.word_count`
 
-Returns the word count of a given string. The word count includes only alpha characters. Hyphenated and words with apostrophes are considered a single word.
+Returns the word count of a given string. The word count includes only alpha characters. Hyphenated and words with apostrophes are considered a single word. You can pass in your own regexp if this is not desired behaviour.
 
 ```ruby
 counter.word_count #=> 15
@@ -161,7 +167,7 @@ counter.word_density
 
 ## Filtering
 
-You can pass in a space-delimited word list to filter words that you don't want to count. Filter words should be *lowercase*. The filter will remove both uppercase and lowercase variants of the word.
+You can pass in a *space-delimited* word list to filter words that you don't want to count. The filter will remove both uppercase and lowercase variants of the word.
 
 ```ruby
 WordsCounted::Counter.new(
@@ -179,7 +185,9 @@ Defining words is tricky business. Out of the box, the default regexp accounts f
 /[\p{Alpha}\-']+/
 ```
 
-If you prefer, you can pass in your own criteria in the form of a Ruby regexp to split your string as desired. For example, if you wanted to count numbers as words, you could pass the following regex instead of the default one.
+But maybe you don't want to count words? Well, count anything you want. What you count is only limited by your knowledge of regular expressions. Pass in your own criteria in the form of a Ruby regexp to split your string as desired.
+
+For example, if you wanted to count numbers as words, you could pass the following regex instead of the default one.
 
 ```ruby
 counter = WordsCounted::Counter.new("I am 007.", regex: /[\p{Alnum}\-']+/)
@@ -189,7 +197,7 @@ counter.words
 
 ## Gotchas
 
-A hyphen use in leu of an *em* or *en* dash will form part of the word and throw off the `word_occurences` algorithm.
+A hyphen used in leu of an *em* or *en* dash will form part of the word and throw off the `word_occurences` algorithm.
 
 ```ruby
 counter = WordsCounted::Counter.new("How do you do?-you are well, I see.")
@@ -213,18 +221,12 @@ counter.word_occurrences
 
 In this example, `-you` and `you` are counted as separate words. Writers should use the correct dash element, but this is not always the case.
 
-Another gotcha is that the default criteria does not count numbers as words.
+Another gotcha is that the default criteria does not count numbers as words. Remember that you can pass in your own regexp if the default solution does not fit your needs.
 
-Remember that you can pass in your own regexp if the default solution does not fit your needs.
+## Road Map
 
-## To do
-
-1. Add paragraph counter.
-2. Add ability to open files or URLs.
-3. A character counter, with spaces, and without spaces.
-4. A sentence counter.
-5. Average words in a sentence.
-6. Average sentence chars.
+1. Add ability to open files or URLs.
+2. Add paragraph, sentence, average words per sentence, and average sentence chars counters.
 
 #### Ability to open files or urls
 
