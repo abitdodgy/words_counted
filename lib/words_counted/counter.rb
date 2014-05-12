@@ -7,7 +7,8 @@ module WordsCounted
     def initialize(string, options = {})
       @options = options
       @char_count = string.length
-      @words = string.scan(regex).reject { |word| filter.include? word.downcase }
+      @filter = filter_proc(options[:filter])
+      @words = string.scan(regex).reject { |word| @filter.call(word) }
       @word_occurrences = words.each_with_object(Hash.new(0)) do |word, hash|
         hash[word.downcase] += 1
       end
@@ -54,12 +55,24 @@ module WordsCounted
       @options[:regex] || WORD_REGEX
     end
 
-    def filter
-      if filters = @options[:filter]
-        filters.split.collect { |word| word.downcase }
+    def filter_proc(filter)
+      if filter.respond_to?(:to_a)
+        filter_procs = Array(filter).map(&method(:filter_proc))
+        ->(word) {
+          filter_procs.any? { |p| p.call(word) }
+        }
+      elsif filter.respond_to?(:to_str)
+        f = filter.split.collect { |word| word.downcase }
+        ->(w) { f.include?(w.downcase) }
+      elsif Regexp.try_convert(filter)
+        filter = Regexp.try_convert(filter)
+        Proc.new { |w| w =~ filter }
+      elsif filter.respond_to?(:to_proc)
+        filter.to_proc
       else
-        []
+        raise ArgumentError, "Incorrect filter type"
       end
     end
+
   end
 end

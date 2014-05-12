@@ -1,4 +1,5 @@
-require "spec_helper"
+# -*- coding: utf-8 -*-
+require_relative "../spec_helper"
 
 module WordsCounted
   describe Counter do
@@ -63,6 +64,21 @@ module WordsCounted
       it "filters words when passed in in uppercase" do
         counter = Counter.new("That was magnificent, Trevor.", filter: "Magnificent")
         expect(counter.words).to eq(%w[That was Trevor])
+      end
+
+      it "it accepts a regexp filter" do
+        counter = Counter.new("That was magnificent, Trevor.", filter: /magnificent/i)
+        expect(counter.words).to eq(%w[That was Trevor])
+      end
+
+      it "accepts an array filter" do
+        counter = Counter.new("That was magnificent, Trevor.", filter: ['That', 'was'])
+        expect(counter.words).to eq(%w[magnificent Trevor])
+      end
+
+      it "accepts a lambda" do
+        counter = Counter.new("That was magnificent, Trevor.", filter: ->(w) {w == 'That'})
+        expect(counter.words).to eq(%w[was magnificent Trevor])
       end
 
       it "splits words based on regex" do
