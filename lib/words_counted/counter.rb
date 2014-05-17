@@ -41,7 +41,7 @@ module WordsCounted
       end.sort_by { |_, value| value }.reverse
     end
 
-    private
+  private
 
     def highest_ranking(entries)
       entries.group_by { |word, value| value }.sort.last.last
