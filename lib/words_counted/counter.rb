@@ -2,13 +2,13 @@ module WordsCounted
   class Counter
     attr_reader :words, :word_occurrences, :word_lengths, :char_count
 
-    WORD_REGEX = /[\p{Alpha}\-']+/
+    WORD_REGEXP = /[\p{Alpha}\-']+/
 
     def initialize(string, options = {})
       @options = options
       @char_count = string.length
-      @filter = filter_proc(options[:filter])
-      @words = string.scan(regex).reject { |word| @filter.call(word) }
+      exclude = filter_proc(options[:exclude])
+      @words = string.scan(regexp).reject { |word| exclude.call(word) }
       @word_occurrences = words.each_with_object(Hash.new(0)) do |word, hash|
         hash[word.downcase] += 1
       end
@@ -51,8 +51,8 @@ module WordsCounted
       (n.to_f / word_count.to_f * 100.0).round(2)
     end
 
-    def regex
-      @options[:regex] || WORD_REGEX
+    def regexp
+      @options[:regexp] || WORD_REGEXP
     end
 
     def filter_proc(filter)
@@ -62,8 +62,10 @@ module WordsCounted
           filter_procs.any? { |p| p.call(word) }
         }
       elsif filter.respond_to?(:to_str)
-        f = filter.split.collect { |word| word.downcase }
-        ->(w) { f.include?(w.downcase) }
+        exclusion_list = filter.split.collect(&:downcase)
+        ->(w) {
+          exclusion_list.include?(w.downcase)
+        }
       elsif Regexp.try_convert(filter)
         filter = Regexp.try_convert(filter)
         Proc.new { |w| w =~ filter }
@@ -73,6 +75,5 @@ module WordsCounted
         raise ArgumentError, "Incorrect filter type"
       end
     end
-
   end
 end

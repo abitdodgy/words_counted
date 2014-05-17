@@ -56,33 +56,33 @@ module WordsCounted
         expect(counter.words).to eq(%w[São Paulo])
       end
 
-      it "filters words" do
-        counter = Counter.new("That was magnificent, Trevor.", filter: "magnificent")
+      it "it accepts a string filter" do
+        counter = Counter.new("That was magnificent, Trevor.", exclude: "magnificent")
         expect(counter.words).to eq(%w[That was Trevor])
       end
 
-      it "filters words when passed in in uppercase" do
-        counter = Counter.new("That was magnificent, Trevor.", filter: "Magnificent")
+      it "filters words in uppercase when using a string filter" do
+        counter = Counter.new("That was magnificent, Trevor.", exclude: "Magnificent")
         expect(counter.words).to eq(%w[That was Trevor])
       end
 
-      it "it accepts a regexp filter" do
-        counter = Counter.new("That was magnificent, Trevor.", filter: /magnificent/i)
+      it "accepts a regexp filter" do
+        counter = Counter.new("That was magnificent, Trevor.", exclude: /magnificent/i)
         expect(counter.words).to eq(%w[That was Trevor])
       end
 
       it "accepts an array filter" do
-        counter = Counter.new("That was magnificent, Trevor.", filter: ['That', 'was'])
+        counter = Counter.new("That was magnificent, Trevor.", exclude: ['That', 'was'])
         expect(counter.words).to eq(%w[magnificent Trevor])
       end
 
-      it "accepts a lambda" do
-        counter = Counter.new("That was magnificent, Trevor.", filter: ->(w) {w == 'That'})
+      it "accepts a lambda filter" do
+        counter = Counter.new("That was magnificent, Trevor.", exclude: ->(w) {w == 'That'})
         expect(counter.words).to eq(%w[was magnificent Trevor])
       end
 
-      it "splits words based on regex" do
-        counter = Counter.new("I am 007.", regex: /[\p{Alnum}\-']+/)
+      it "accepts a custom regexp" do
+        counter = Counter.new("I am 007.", regexp: /[\p{Alnum}\-']+/)
         expect(counter.words).to eq(["I", "am", "007"])
       end
     end
