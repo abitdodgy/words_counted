@@ -61,6 +61,11 @@ module WordsCounted
         expect(counter.words).to eq(%w[That was Trevor])
       end
 
+      it "it accepts a string filter with multiple words" do
+        counter = Counter.new("That was magnificent, Trevor.", exclude: "was magnificent")
+        expect(counter.words).to eq(%w[That Trevor])
+      end
+
       it "filters words in uppercase when using a string filter" do
         counter = Counter.new("That was magnificent, Trevor.", exclude: "Magnificent")
         expect(counter.words).to eq(%w[That was Trevor])
@@ -84,6 +89,11 @@ module WordsCounted
       it "accepts a custom regexp" do
         counter = Counter.new("I am 007.", regexp: /[\p{Alnum}\-']+/)
         expect(counter.words).to eq(["I", "am", "007"])
+      end
+
+      it "char_count should be calculated after the filter is applied" do
+        counter = Counter.new("I am Legend.", exclude: "I am")
+        expect(counter.char_count).to eq(6)
       end
     end
 
@@ -150,13 +160,25 @@ module WordsCounted
 
     describe ".char_count" do
       it "returns the number of chars in the passed in string" do
-        expect(counter.char_count).to eq(66)
+        counter = Counter.new("His name was major, Major Major Major Major.")
+        expect(counter.char_count).to eq(35)
+      end
+
+      it "returns the number of chars in the passed in string after the filter is applied" do
+        counter = Counter.new("His name was major, Major Major Major Major.", exclude: "Major")
+        expect(counter.char_count).to eq(10)
       end
     end
 
     describe ".average_chars_per_word" do
       it "returns the average number of chars per word" do
+        counter = Counter.new("His name was major, Major Major Major Major.")
         expect(counter.average_chars_per_word).to eq(4)
+      end
+
+      it "returns the average number of chars per word after the filter is applied" do
+        counter = Counter.new("His name was major, Major Major Major Major.", exclude: "Major")
+        expect(counter.average_chars_per_word).to eq(3)
       end
     end
 

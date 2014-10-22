@@ -6,9 +6,9 @@ module WordsCounted
 
     def initialize(string, options = {})
       @options = options
-      @char_count = string.length
       exclude = filter_proc(options[:exclude])
       @words = string.scan(regexp).reject { |word| exclude.call(word) }
+      @char_count = @words.join.size
       @word_occurrences = words.each_with_object(Hash.new(0)) do |word, hash|
         hash[word.downcase] += 1
       end
