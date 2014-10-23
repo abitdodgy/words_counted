@@ -48,7 +48,7 @@ module WordsCounted
     end
 
     def percent_of(n)
-      (n.to_f / word_count.to_f * 100.0).round(2)
+      (n.to_f / word_count.to_f * 100).round(2)
     end
 
     def regexp
@@ -63,16 +63,16 @@ module WordsCounted
         }
       elsif filter.respond_to?(:to_str)
         exclusion_list = filter.split.collect(&:downcase)
-        ->(w) {
-          exclusion_list.include?(w.downcase)
+        ->(word) {
+          exclusion_list.include?(word.downcase)
         }
       elsif Regexp.try_convert(filter)
         filter = Regexp.try_convert(filter)
-        Proc.new { |w| w =~ filter }
+        Proc.new { |word| word =~ filter }
       elsif filter.respond_to?(:to_proc)
         filter.to_proc
       else
-        raise ArgumentError, "Incorrect filter type"
+        raise ArgumentError, "Filter must String, Array, Proc, or Regexp"
       end
     end
   end

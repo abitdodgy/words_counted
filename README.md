@@ -1,10 +1,10 @@
 # Words Counted
 
-Words Counted is a highly customisable Ruby string analyser. It includes some handy utility methods that go beyond word counting. You can use this gem to get word density, words and their number of occurrences, the highest occurring words, and few more things.
+Words Counted is a highly customisable Ruby string analyser. It includes many handy utility methods that go beyond word counting. You can use this gem to get word density, words and the number of times they occur, the highest occurring words, and few more things.
 
-I use the word *word* loosely here, since you can pass the program any string you want: words, numbers, characters, etc...
+I use *word* loosely here, since you can pass the program any string you want: words, numbers, characters, etc...
 
-You can pass in your custom criteria for splitting strings in the form of a custom regular expression. This affords you a great deal of flexibility, whether you want to count words, numbers, or special characters.
+Pass in your own regular expression to customise the criteria for splitting strings. This makes Words Counted very flexible, whether you want to count words, numbers, or special characters.
 
 ### Features
 
@@ -19,9 +19,9 @@ You can pass in your custom criteria for splitting strings in the form of a cust
     * The longest word(s) and its length
     * The most occurring word(s) and its number of occurrences.
 * A flexible way to exclude words (or anything) from the count. You can pass in a **string**, a **regexp**, an **array**, or a **lambda**.
-* Filters special characters but respects hyphens and apostrophes.
-* Plays nicely with diacritics (UTF and unicode characters): "São Paulo" is treated as `["São", "Paulo"]` and not `["S", "", "o", "Paulo"]`.
-* Customisable criteria. Pass in your own regexp rules to split strings if you prefer.
+* Customisable criteria. Pass in your own regexp rules to split strings if you prefer. The default regexp has two features:
+  * Filters special characters but respects hyphens and apostrophes.
+  * Plays nicely with diacritics (UTF and unicode characters): "São Paulo" is treated as `["São", "Paulo"]` and not `["S", "", "o", "Paulo"]`.
 
 See usage instructions for details on each feature.
 
@@ -44,8 +44,8 @@ Or install it yourself as:
 Create an instance of `Counter` and pass in a string and an optional filter and/or regexp.
 
 ```ruby
-counter = WordsCounted::Counter.new(
-	"We are all in the gutter, but some of us are looking at the stars."
+counter = WordsCounted.count(
+  "We are all in the gutter, but some of us are looking at the stars."
 )
 ```
 
@@ -67,19 +67,19 @@ Returns a hash map of words and their number of occurrences. Uppercase and lower
 counter.word_occurrences
 
 {
-   "we" => 1,
-   "are" => 2,
-   "all" => 1,
-   "in" => 1,
-   "the" => 2,
-   "gutter" => 1,
-   "but" => 1,
-   "some" => 1,
-   "of" => 1,
-   "us" => 1,
-   "looking" => 1,
-   "at" => 1,
-   "stars" => 1
+  "we" => 1,
+  "are" => 2,
+  "all" => 1,
+  "in" => 1,
+  "the" => 2,
+  "gutter" => 1,
+  "but" => 1,
+  "some" => 1,
+  "of" => 1,
+  "us" => 1,
+  "looking" => 1,
+  "at" => 1,
+  "stars" => 1
  }
 ```
 
@@ -144,19 +144,19 @@ Returns a two-dimentional array of words and their density.
 counter.word_density
 
 [
-  ["are", 13.33],
-  ["the", 13.33],
-  ["but", 6.67],
-  ["us", 6.67],
-  ["of", 6.67],
-  ["some", 6.67],
+  ["are",     13.33],
+  ["the",     13.33],
+  ["but",     6.67],
+  ["us",      6.67],
+  ["of",      6.67],
+  ["some",    6.67],
   ["looking", 6.67],
-  ["gutter", 6.67],
-  ["at", 6.67],
-  ["in", 6.67],
-  ["all", 6.67],
-  ["stars", 6.67],
-  ["we", 6.67]
+  ["gutter",  6.67],
+  ["at",      6.67],
+  ["in",      6.67],
+  ["all",     6.67],
+  ["stars",   6.67],
+  ["we",      6.67]
 ]
 ```
 
@@ -198,7 +198,7 @@ You can exclude anything you want from the string you want to analyse by passing
 
 #### Using a string
 ```ruby
-WordsCounted::Counter.new(
+WordsCounted.count(
   "Magnificent! That was magnificent, Trevor.", exclude: "was magnificent"
 )
 counter.words
@@ -207,21 +207,21 @@ counter.words
 
 #### Using an array
 ```ruby
-WordsCounted::Counter.new("1 2 3 4 5 6", regexp: /[0-9]/, exclude: ['1', '2', '3'])
+WordsCounted.count("1 2 3 4 5 6", regexp: /[0-9]/, exclude: ['1', '2', '3'])
 counter.words
 #=> ["4", "5", "6"]
 ```
 
 #### Using a regular expression
 ```ruby
-WordsCounted::Counter.new("Hello Beirut", exclude: /Beirut/)
+WordsCounted.count("Hello Beirut", exclude: /Beirut/)
 counter.words
 #=> ["Hello"]
 ```
 
 #### Using a lambda
 ```ruby
-WordsCounted::Counter.new(
+WordsCounted.count(
   "1 2 3 4 5 6", regexp: /[0-9]/, exclude: ->(w) { w.to_i.even? }
 )
 counter.words
@@ -241,7 +241,7 @@ But maybe you don't want to count words? Well, count anything you want. What you
 For example, if you wanted to include numbers in your analysis, you can override the regular expression:
 
 ```ruby
-counter = WordsCounted::Counter.new("Numbers 1, 2, and 3", regexp: /[\p{Alnum}\-']+/)
+counter = WordsCounted.count("Numbers 1, 2, and 3", regexp: /[\p{Alnum}\-']+/)
 counter.words
 #=> ["Numbers", "1", "2", "and", "3"]
 ```
@@ -251,7 +251,7 @@ counter.words
 A hyphen used in leu of an *em* or *en* dash will form part of the word and throw off the `word_occurences` algorithm.
 
 ```ruby
-counter = WordsCounted::Counter.new("How do you do?-you are well, I see.")
+counter = WordsCounted.count("How do you do?-you are well, I see.")
 counter.word_occurrences
 
 {

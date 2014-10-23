@@ -7,4 +7,7 @@ rescue LoadError
 end
 
 module WordsCounted
+  def self.count(string, options = {})
+    Counter.new(string, options)
+  end
 end

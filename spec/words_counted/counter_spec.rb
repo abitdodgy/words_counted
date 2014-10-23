@@ -148,7 +148,7 @@ module WordsCounted
     end
 
     describe ".word_density" do
-      it "returns a hash" do
+      it "returns an array" do
         expect(counter.word_density).to be_a(Array)
       end
 
