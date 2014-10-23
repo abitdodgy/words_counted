@@ -5,7 +5,7 @@ module WordsCounted
   describe Counter do
     let(:counter) { Counter.new("We are all in the gutter, but some of us are looking at the stars.") }
 
-    describe "#initialize" do
+    describe "initialize" do
       it "sets @options" do
         expect(counter.instance_variables).to include(:@options)
       end
@@ -27,7 +27,7 @@ module WordsCounted
       end
     end
 
-    describe ".words" do
+    describe "words" do
       it "returns an array" do
         expect(counter.words).to be_a(Array)
       end
@@ -97,13 +97,13 @@ module WordsCounted
       end
     end
 
-    describe ".word_count" do
+    describe "word_count" do
       it "returns the correct word count" do
         expect(counter.word_count).to eq(15)
       end
     end
 
-    describe ".word_occurrences" do
+    describe "word_occurrences" do
       it "returns a hash" do
         expect(counter.word_occurrences).to be_a(Hash)
       end
@@ -114,7 +114,7 @@ module WordsCounted
       end
     end
 
-    describe ".most_occurring_words" do
+    describe "most_occurring_words" do
       it "returns an array" do
         expect(counter.most_occurring_words).to be_a(Array)
       end
@@ -125,7 +125,7 @@ module WordsCounted
       end
     end
 
-    describe '.word_lengths' do
+    describe 'word_lengths' do
       it "returns a hash" do
         expect(counter.word_lengths).to be_a(Hash)
       end
@@ -136,7 +136,7 @@ module WordsCounted
       end
     end
 
-    describe ".longest_words" do
+    describe "longest_words" do
       it "returns an array" do
         expect(counter.longest_words).to be_a(Array)
       end
@@ -147,7 +147,7 @@ module WordsCounted
       end
     end
 
-    describe ".word_density" do
+    describe "word_density" do
       it "returns an array" do
         expect(counter.word_density).to be_a(Array)
       end
@@ -158,7 +158,7 @@ module WordsCounted
       end
     end
 
-    describe ".char_count" do
+    describe "char_count" do
       it "returns the number of chars in the passed in string" do
         counter = Counter.new("His name was major, Major Major Major Major.")
         expect(counter.char_count).to eq(35)
@@ -170,7 +170,7 @@ module WordsCounted
       end
     end
 
-    describe ".average_chars_per_word" do
+    describe "average_chars_per_word" do
       it "returns the average number of chars per word" do
         counter = Counter.new("His name was major, Major Major Major Major.")
         expect(counter.average_chars_per_word).to eq(4)
@@ -182,10 +182,17 @@ module WordsCounted
       end
     end
 
-    describe ".unique_word_count" do
+    describe "unique_word_count" do
       it "returns the number of unique words" do
         expect(counter.unique_word_count).to eq(13)
       end
+    end
+  end
+
+  describe "from_file" do
+    it "opens and reads a text file" do
+      counter = WordsCounted.from_file('spec/support/the_hart_and_the_hunter.txt')
+      expect(counter.word_count).to eq(139)
     end
   end
 end

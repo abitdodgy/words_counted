@@ -8,7 +8,7 @@ Pass in your own regular expression to customise the criteria for splitting stri
 
 ### Features
 
-* Get the following data from any string:
+* Get the following data from any string or readable file:
     * Word count
     * Unique word count
     * Word density
@@ -22,6 +22,7 @@ Pass in your own regular expression to customise the criteria for splitting stri
 * Customisable criteria. Pass in your own regexp rules to split strings if you prefer. The default regexp has two features:
   * Filters special characters but respects hyphens and apostrophes.
   * Plays nicely with diacritics (UTF and unicode characters): "São Paulo" is treated as `["São", "Paulo"]` and not `["S", "", "o", "Paulo"]`.
+* Pass in a file path instead of a string. WordsCounted opens and reads files.
 
 See usage instructions for details on each feature.
 
@@ -41,12 +42,13 @@ Or install it yourself as:
 
 ## Usage
 
-Create an instance of `Counter` and pass in a string and an optional filter and/or regexp.
+Pass in a string or a file path, and an optional filter and/or regexp.
 
 ```ruby
-counter = WordsCounted.count(
-  "We are all in the gutter, but some of us are looking at the stars."
-)
+counter = WordsCounted.count("We are all in the gutter, but some of us are looking at the stars.")
+
+# Using a file
+counter = WordsCounted.from_file("path/to/my/file.txt")
 ```
 
 ### API
@@ -246,6 +248,14 @@ counter.words
 #=> ["Numbers", "1", "2", "and", "3"]
 ```
 
+## Opening and Reading Files
+
+Use the `from_file` method to open files. Opening files accepts the same options as reading from a string. The file path can be a URL.
+
+```ruby
+counter = WordsCounted.from_file("url/or/path/to/file.text")
+```
+
 ## Gotchas
 
 A hyphen used in leu of an *em* or *en* dash will form part of the word and throw off the `word_occurences` algorithm.
@@ -273,10 +283,10 @@ Another gotcha is that the default criteria does not include numbers in its anal
 
 ## Road Map
 
-1. Add ability to open files or URLs.
+1. Add ability to open URLs.
 2. Add paragraph, sentence, average words per sentence, and average sentence chars counters.
 
-#### Ability to open files and URLs
+#### Ability to open URLs
 
 Maybe I can some class methods to open the file and init the counter class.
 
