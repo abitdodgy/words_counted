@@ -114,6 +114,17 @@ module WordsCounted
       end
     end
 
+    describe "sorted_word_occurrences" do
+      it "returns an array" do
+        expect(counter.sorted_word_occurrences).to be_a(Array)
+      end
+
+      it "returns a two dimensional array sorted by descending word occurrence" do
+        counter = Counter.new("Blue, green, green, green, orange, green, orange, red, orange, red")
+        expect(counter.sorted_word_occurrences).to eq([ ["green", 4], ["orange", 3], ["red", 2], ["blue", 1] ])
+      end
+    end
+
     describe "most_occurring_words" do
       it "returns an array" do
         expect(counter.most_occurring_words).to be_a(Array)
@@ -133,6 +144,17 @@ module WordsCounted
       it "returns a hash of word lengths" do
         counter = Counter.new("One two three.")
         expect(counter.word_lengths).to eq({ "One" => 3, "two" => 3, "three" => 5 })
+      end
+    end
+
+    describe "sorted_word_lengths" do
+      it "returns an array" do
+        expect(counter.sorted_word_lengths).to be_a(Array)
+      end
+
+      it "returns a two dimensional array sorted by descending word length" do
+        counter = Counter.new("I am not certain of that")
+        expect(counter.sorted_word_lengths).to eq([ ["certain", 7], ["that", 4], ["not", 3], ["of", 2], ["am", 2], ["I", 1] ])
       end
     end
 

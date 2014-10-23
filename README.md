@@ -2,9 +2,9 @@
 
 Words Counted is a highly customisable Ruby string analyser. It includes many handy utility methods that go beyond word counting. You can use this gem to get word density, words and the number of times they occur, the highest occurring words, and few more things.
 
-I use *word* loosely here, since you can pass the program any string you want: words, numbers, characters, etc...
+I use *word* loosely since you can pass the program any string you want: words, numbers, characters, etc...
 
-Pass in your own regular expression to customise the criteria for splitting strings. This makes Words Counted very flexible, whether you want to count words, numbers, or special characters.
+Pass your own regular expression to customise the criteria for splitting strings. This makes Words Counted very flexible, whether you want to count words, numbers, or special characters.
 
 ### Features
 
@@ -18,11 +18,11 @@ Pass in your own regular expression to customise the criteria for splitting stri
     * A hash map of words and their lengths
     * The longest word(s) and its length
     * The most occurring word(s) and its number of occurrences.
-* A flexible way to exclude words (or anything) from the count. You can pass in a **string**, a **regexp**, an **array**, or a **lambda**.
-* Customisable criteria. Pass in your own regexp rules to split strings if you prefer. The default regexp has two features:
+* A flexible way to exclude words (or anything) from the count. You can pass a **string**, a **regexp**, an **array**, or a **lambda**.
+* Customisable criteria. Pass your own regexp rules to split strings if you prefer. The default regexp has two features:
   * Filters special characters but respects hyphens and apostrophes.
   * Plays nicely with diacritics (UTF and unicode characters): "São Paulo" is treated as `["São", "Paulo"]` and not `["S", "", "o", "Paulo"]`.
-* Pass in a file path instead of a string. WordsCounted opens and reads files.
+* Pass in a file path or a url instead of a string. Words Counted opens and reads files.
 
 See usage instructions for details on each feature.
 
@@ -45,7 +45,9 @@ Or install it yourself as:
 Pass in a string or a file path, and an optional filter and/or regexp.
 
 ```ruby
-counter = WordsCounted.count("We are all in the gutter, but some of us are looking at the stars.")
+counter = WordsCounted.count(
+  "We are all in the gutter, but some of us are looking at the stars."
+)
 
 # Using a file
 counter = WordsCounted.from_file("path/to/my/file.txt")
@@ -63,26 +65,42 @@ counter.word_count #=> 15
 
 #### `.word_occurrences`
 
-Returns a hash map of words and their number of occurrences. Uppercase and lowercase words are counted as the same word.
+Returns an unsorted hash map of words and their number of occurrences. Uppercase and lowercase words are counted as the same word.
 
 ```ruby
 counter.word_occurrences
 
 {
-  "we" => 1,
-  "are" => 2,
-  "all" => 1,
-  "in" => 1,
-  "the" => 2,
-  "gutter" => 1,
-  "but" => 1,
-  "some" => 1,
-  "of" => 1,
-  "us" => 1,
+  "we"      => 1,
+  "are"     => 2,
+  "all"     => 1,
+  "in"      => 1,
+  "the"     => 2,
+  "gutter"  => 1,
+  "but"     => 1,
+  "some"    => 1,
+  "of"      => 1,
+  "us"      => 1,
   "looking" => 1,
-  "at" => 1,
-  "stars" => 1
- }
+  "at"      => 1,
+  "stars"   => 1
+}
+```
+
+#### `.sorted_word_occurrences`
+
+Returns a two dimentional array of words and their number of occurrences sorted in descending order. Uppercase and lowercase words are counted as the same word.
+
+```ruby
+counter.sorted_word_occurrences
+
+[
+  ["the", 2],
+  ["are", 2],
+  ["we",  1],
+  # ...
+  ["all", 1]
+]
 ```
 
 #### `.most_occurring_words`
@@ -97,26 +115,42 @@ counter.most_occurring_words
 
 #### `.word_lengths`
 
-Returns a hash of words and their lengths.
+Returns an unsorted hash of words and their lengths.
 
 ```ruby
 counter.word_lengths
 
 {
-  "We" => 2,
-  "are" => 3,
-  "all" => 3,
-  "in" => 2,
-  "the" => 3,
-  "gutter" => 6,
-  "but" => 3,
-  "some" => 4,
-  "of" => 2,
-  "us" => 2,
+  "We"      => 2,
+  "are"     => 3,
+  "all"     => 3,
+  "in"      => 2,
+  "the"     => 3,
+  "gutter"  => 6,
+  "but"     => 3,
+  "some"    => 4,
+  "of"      => 2,
+  "us"      => 2,
   "looking" => 7,
-  "at" => 2,
-  "stars" => 5
+  "at"      => 2,
+  "stars"   => 5
 }
+```
+
+#### `.sorted_word_lengths`
+
+Returns a two dimentional array of words and their lengths sorted in descending order.
+
+```ruby
+counter.sorted_word_lengths
+
+[
+  ["looking", 7],
+  ["gutter",  6],
+  ["stars",   5],
+  # ...
+  ["in",      2]
+]
 ```
 
 #### `.longest_word`
@@ -167,8 +201,7 @@ counter.word_density
 Returns the string's character count.
 
 ```ruby
-counter.char_count
-#=> 76
+counter.char_count              #=> 76
 ```
 
 #### `.average_chars_per_word`
@@ -176,8 +209,7 @@ counter.char_count
 Returns the average character count per word.
 
 ```ruby
-counter.average_chars_per_word
-#=> 4
+counter.average_chars_per_word  #=> 4
 ```
 
 #### `.unique_word_count`
@@ -185,15 +217,14 @@ counter.average_chars_per_word
 Returns the count of unique words in the string.
 
 ```ruby
-counter.unique_word_count
-#=> 13
+counter.unique_word_count       #=> 13
 ```
 
 ## Excluding words from the analyser
 
-You can exclude anything you want from the string you want to analyse by passing in an `exclude` option. The exclude option accepts a variety of filters.
+You can exclude anything you want from the string you want to analyse by passing in the `exclude` option. The exclude option accepts a variety of filters.
 
-1. A *space-delimited* list of candidates. The filter will remove both uppercase and lowercase variants of the candidate, when applicable. Useful for excluding *the*, *a*, and so on.
+1. A *space-delimited* list of candidates. The filter will remove both uppercase and lowercase variants of the candidate when applicable. Useful for excluding *the*, *a*, and so on.
 2. An array of string candidates. For example: `['a', 'the']`.
 3. A regular expression.
 4. A lambda.
@@ -223,22 +254,20 @@ counter.words
 
 #### Using a lambda
 ```ruby
-WordsCounted.count(
-  "1 2 3 4 5 6", regexp: /[0-9]/, exclude: ->(w) { w.to_i.even? }
-)
+WordsCounted.count("1 2 3 4 5 6", regexp: /[0-9]/, exclude: ->(w) { w.to_i.even? })
 counter.words
 #=> ["1", "3", "5"]
 ```
 
 ## Passing in a Custom Regexp
 
-Defining words is tricky business. Out of the box, the default regexp accounts for letters, hyphenated words, and apostrophes. This means *twenty-one* is treated as one word. So is *Mohamad's*.
+Defining words is tricky. The default regexp accounts for letters, hyphenated words, and apostrophes. This means *twenty-one* is treated as one word. So is *Mohamad's*.
 
 ```ruby
 /[\p{Alpha}\-']+/
 ```
 
-But maybe you don't want to count words? Well, count anything you want. What you count is only limited by your knowledge of regular expressions. Pass in your own criteria in the form of a Ruby regular expression to split your string as desired.
+But maybe you don't want to count words?&ndash;Well, analyse anything you want. What you analyse is only limited by your knowledge of regular expressions. Pass your own criteria as a Ruby regular expression to split your string as desired.
 
 For example, if you wanted to include numbers in your analysis, you can override the regular expression:
 
@@ -250,7 +279,7 @@ counter.words
 
 ## Opening and Reading Files
 
-Use the `from_file` method to open files. Opening files accepts the same options as reading from a string. The file path can be a URL.
+Use the `from_file` method to open files. `from_file` accepts the same options as `count`. The file path can be a URL.
 
 ```ruby
 counter = WordsCounted.from_file("url/or/path/to/file.text")
@@ -258,28 +287,28 @@ counter = WordsCounted.from_file("url/or/path/to/file.text")
 
 ## Gotchas
 
-A hyphen used in leu of an *em* or *en* dash will form part of the word and throw off the `word_occurences` algorithm.
+A hyphen used in leu of an *em* or *en* dash will form part of the word. This affects the `word_occurences` algorithm.
 
 ```ruby
 counter = WordsCounted.count("How do you do?-you are well, I see.")
 counter.word_occurrences
 
 {
-  "how" => 1,
-  "do" => 2,
-  "you" => 1,
-  "-you" => 1, # WTF, mate!
-  "are" => 1,
-  "very" => 1,
-  "well" => 1,
-  "i" => 1,
-  "see" => 1
+  "how"   => 1,
+  "do"    => 2,
+  "you"   => 1,
+  "-you"  => 1, # WTF, mate!
+  "are"   => 1,
+  "very"  => 1,
+  "well"  => 1,
+  "i"     => 1,
+  "see"   => 1
 }
 ```
 
-In this example, `-you` and `you` are counted as separate words. Writers should use the correct dash element, but this is not always the case.
+In this example `-you` and `you` are counted as separate words. Writers should use the correct dash element, but this is not always true.
 
-Another gotcha is that the default criteria does not include numbers in its analysis. Remember that you can pass in your own regular expression if the default behaviour does not fit your needs.
+Another gotcha is that the default criteria does not include numbers in its analysis. Remember that you can pass your own regular expression if the default behaviour does not fit your needs.
 
 ## Road Map
 
@@ -288,15 +317,11 @@ Another gotcha is that the default criteria does not include numbers in its anal
 
 #### Ability to open URLs
 
-Maybe I can some class methods to open the file and init the counter class.
+Something like...
 
 ```ruby
 def self.count_from_url
-  new # open url and send string here after removing html
-end
-
-def self.from_file
-  new # open file and send string here.
+  # open url and send string here after removing html
 end
 ```
 
@@ -314,7 +339,7 @@ Originally I wrote this program for a code challenge on Treehouse. You can find 
 
 Thanks to Dave Yarwood for helping me improve my code. Some of my code is based on his recommendations. You can find the original program implementation, as well as Dave's code review, on [Code Review][1].
 
-Thanks to [Wayne Conrad][2] for providing [an excellent code review][3], and improving the filter feature well beyond what I can come up with.
+Thanks to [Wayne Conrad][2] for providing [an excellent code review][3], and improving the filter feature to well beyond what I can come up with.
 
 ## Contributing
 
@@ -327,4 +352,4 @@ Thanks to [Wayne Conrad][2] for providing [an excellent code review][3], and imp
 
   [1]: http://codereview.stackexchange.com/questions/46105/a-ruby-string-analyser
   [2]: https://github.com/wconrad
-  [3]: http://codereview.stackexchange.com/a/47515/1563
+  [3]: http://codereview.stackexchange.com/a/49476/1563

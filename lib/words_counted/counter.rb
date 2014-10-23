@@ -41,6 +41,14 @@ module WordsCounted
       end.sort_by { |_, value| value }.reverse
     end
 
+    def sorted_word_occurrences
+      word_occurrences.sort_by { |_, v| v }.reverse
+    end
+
+    def sorted_word_lengths
+      word_lengths.sort_by { |_, v| v }.reverse
+    end
+
   private
 
     def highest_ranking(entries)
