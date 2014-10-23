@@ -36,23 +36,28 @@ module WordsCounted
     end
 
     def word_density
-      word_occurrences.each_with_object({}) do |(word, occ), hash|
+      word_densities = word_occurrences.each_with_object({}) do |(word, occ), hash|
         hash[word] = percent_of(occ)
-      end.sort_by { |_, value| value }.reverse
+      end
+      sort_by_descending_value word_densities
     end
 
     def sorted_word_occurrences
-      word_occurrences.sort_by { |_, v| v }.reverse
+      sort_by_descending_value word_occurrences
     end
 
     def sorted_word_lengths
-      word_lengths.sort_by { |_, v| v }.reverse
+      sort_by_descending_value word_lengths
     end
 
   private
 
     def highest_ranking(entries)
-      entries.group_by { |word, value| value }.sort.last.last
+      entries.group_by { |_, value| value }.sort.last.last
+    end
+
+    def sort_by_descending_value(entries)
+      entries.sort_by { |_, value| value }.reverse
     end
 
     def percent_of(n)
