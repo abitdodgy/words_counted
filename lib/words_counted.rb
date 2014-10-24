@@ -12,9 +12,6 @@ module WordsCounted
   end
 
   def self.from_file(path, options = {})
-    file = File.open(path)
-    data = file.read
-    file.close
-    count(data, options)
+    Counter.from_file(path, options)
   end
 end

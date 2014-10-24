@@ -4,14 +4,18 @@ module WordsCounted
 
     WORD_REGEXP = /[\p{Alpha}\-']+/
 
+    def self.from_file(path, options = {})
+      File.open(path) do |file|
+        new file.read, options
+      end
+    end
+
     def initialize(string, options = {})
       @options = options
       exclude = filter_proc(options[:exclude])
       @words = string.scan(regexp).reject { |word| exclude.call(word) }
       @char_count = @words.join.size
-      @word_occurrences = words.each_with_object(Hash.new(0)) do |word, hash|
-        hash[word.downcase] += 1
-      end
+      @word_occurrences = words.each_with_object(Hash.new(0)) { |word, hash| hash[word.downcase] += 1 }
       @word_lengths = words.each_with_object({}) { |word, hash| hash[word] ||= word.length }
     end
 
@@ -23,8 +27,8 @@ module WordsCounted
       words.uniq.size
     end
 
-    def average_chars_per_word
-      (char_count / word_count).round(2)
+    def average_chars_per_word(precision = 2)
+      (char_count.to_f / word_count.to_f).round(precision)
     end
 
     def most_occurring_words
@@ -35,9 +39,9 @@ module WordsCounted
       highest_ranking word_lengths
     end
 
-    def word_density
+    def word_density(precision = 2)
       word_densities = word_occurrences.each_with_object({}) do |(word, occ), hash|
-        hash[word] = percent_of(occ)
+        hash[word] = (occ.to_f / word_count.to_f * 100).round(precision)
       end
       sort_by_descending_value word_densities
     end
@@ -60,10 +64,6 @@ module WordsCounted
       entries.sort_by { |_, value| value }.reverse
     end
 
-    def percent_of(n)
-      (n.to_f / word_count.to_f * 100).round(2)
-    end
-
     def regexp
       @options[:regexp] || WORD_REGEXP
     end
@@ -79,13 +79,12 @@ module WordsCounted
         ->(word) {
           exclusion_list.include?(word.downcase)
         }
-      elsif Regexp.try_convert(filter)
-        filter = Regexp.try_convert(filter)
-        Proc.new { |word| word =~ filter }
+      elsif regexp_filter = Regexp.try_convert(filter)
+        Proc.new { |word| word =~ regexp_filter }
       elsif filter.respond_to?(:to_proc)
         filter.to_proc
       else
-        raise ArgumentError, "Filter must String, Array, Proc, or Regexp"
+        raise ArgumentError, "Filter must String, Array, Lambda, or Regexp"
       end
     end
   end

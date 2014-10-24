@@ -175,32 +175,42 @@ module WordsCounted
       end
 
       it "returns words and their density in percent" do
-        counter = Counter.new("His name was major, I mean, Major Major Major Major.")
-        expect(counter.word_density).to eq([["major", 50.0], ["mean", 10.0], ["i", 10.0], ["was", 10.0], ["name", 10.0], ["his", 10.0]])
+        counter = Counter.new("His name was Major, major Major Major.")
+        expect(counter.word_density).to eq([["major", 57.14], ["was", 14.29], ["name", 14.29], ["his", 14.29]])
+      end
+
+      it "accepts a precision" do
+        counter = Counter.new("His name was Major, major Major Major.")
+        expect(counter.word_density(4)).to eq([["major", 57.1429], ["was", 14.2857], ["name", 14.2857], ["his", 14.2857]])
       end
     end
 
     describe "char_count" do
       it "returns the number of chars in the passed in string" do
-        counter = Counter.new("His name was major, Major Major Major Major.")
-        expect(counter.char_count).to eq(35)
+        counter = Counter.new("His name was Major, major Major Major.")
+        expect(counter.char_count).to eq(30)
       end
 
       it "returns the number of chars in the passed in string after the filter is applied" do
-        counter = Counter.new("His name was major, Major Major Major Major.", exclude: "Major")
+        counter = Counter.new("His name was Major, major Major Major.", exclude: "Major")
         expect(counter.char_count).to eq(10)
       end
     end
 
     describe "average_chars_per_word" do
       it "returns the average number of chars per word" do
-        counter = Counter.new("His name was major, Major Major Major Major.")
-        expect(counter.average_chars_per_word).to eq(4)
+        counter = Counter.new("His name was major, Major Major Major.")
+        expect(counter.average_chars_per_word).to eq(4.29)
       end
 
       it "returns the average number of chars per word after the filter is applied" do
-        counter = Counter.new("His name was major, Major Major Major Major.", exclude: "Major")
-        expect(counter.average_chars_per_word).to eq(3)
+        counter = Counter.new("His name was Major, Major Major Major.", exclude: "Major")
+        expect(counter.average_chars_per_word).to eq(3.33)
+      end
+
+      it "accepts precision" do
+        counter = Counter.new("This line should have 39 characters minus spaces.")
+        expect(counter.average_chars_per_word(4)).to eq(5.5714)
       end
     end
 

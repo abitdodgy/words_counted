@@ -50,7 +50,7 @@ counter = WordsCounted.count(
 )
 
 # Using a file
-counter = WordsCounted.from_file("path/to/my/file.txt")
+counter = WordsCounted.from_file("path/or/url/to/my/file.txt")
 ```
 
 ### API
@@ -172,9 +172,9 @@ counter.words
 #=> ["We", "are", "all", "in", "the", "gutter", "but", "some", "of", "us", "are", "looking", "at", "the", "stars"]
 ```
 
-#### `.word_density`
+#### `.word_density([ precision = 2 ])`
 
-Returns a two-dimentional array of words and their density.
+Returns a two-dimentional array of words and their density to a precision of two. It accepts a precision argument which defaults to two.
 
 ```ruby
 counter.word_density
@@ -182,17 +182,17 @@ counter.word_density
 [
   ["are",     13.33],
   ["the",     13.33],
-  ["but",     6.67],
-  ["us",      6.67],
-  ["of",      6.67],
-  ["some",    6.67],
-  ["looking", 6.67],
-  ["gutter",  6.67],
-  ["at",      6.67],
-  ["in",      6.67],
-  ["all",     6.67],
-  ["stars",   6.67],
-  ["we",      6.67]
+  ["but",     6.67 ],
+  ["us",      6.67 ],
+  ["of",      6.67 ],
+  ["some",    6.67 ],
+  ["looking", 6.67 ],
+  ["gutter",  6.67 ],
+  ["at",      6.67 ],
+  ["in",      6.67 ],
+  ["all",     6.67 ],
+  ["stars",   6.67 ],
+  ["we",      6.67 ]
 ]
 ```
 
@@ -204,9 +204,9 @@ Returns the string's character count.
 counter.char_count              #=> 76
 ```
 
-#### `.average_chars_per_word`
+#### `.average_chars_per_word([ precision = 2 ])`
 
-Returns the average character count per word.
+Returns the average character count per word. Accepts a precision argument which defaults to two.
 
 ```ruby
 counter.average_chars_per_word  #=> 4
