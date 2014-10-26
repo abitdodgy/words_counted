@@ -143,7 +143,7 @@ module WordsCounted
 
       it "returns a hash of word lengths" do
         counter = Counter.new("One two three.")
-        expect(counter.word_lengths).to eq({ "One" => 3, "two" => 3, "three" => 5 })
+        expect(counter.word_lengths).to eq({ "one" => 3, "two" => 3, "three" => 5 })
       end
     end
 
@@ -154,7 +154,7 @@ module WordsCounted
 
       it "returns a two dimensional array sorted by descending word length" do
         counter = Counter.new("I am not certain of that")
-        expect(counter.sorted_word_lengths).to eq([ ["certain", 7], ["that", 4], ["not", 3], ["of", 2], ["am", 2], ["I", 1] ])
+        expect(counter.sorted_word_lengths).to eq([ ["certain", 7], ["that", 4], ["not", 3], ["of", 2], ["am", 2], ["i", 1] ])
       end
     end
 
@@ -165,7 +165,7 @@ module WordsCounted
 
       it "returns the longest words" do
         counter = Counter.new("Those whom the gods love grow young.")
-        expect(counter.longest_words).to eq([["Those", 5],["young", 5]])
+        expect(counter.longest_words).to eq([["those", 5],["young", 5]])
       end
     end
 

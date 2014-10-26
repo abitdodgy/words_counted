@@ -14,9 +14,9 @@ module WordsCounted
       @options = options
       exclude = filter_proc(options[:exclude])
       @words = string.scan(regexp).reject { |word| exclude.call(word) }
-      @char_count = @words.join.size
+      @char_count = words.join.size
       @word_occurrences = words.each_with_object(Hash.new(0)) { |word, hash| hash[word.downcase] += 1 }
-      @word_lengths = words.each_with_object({}) { |word, hash| hash[word] ||= word.length }
+      @word_lengths = words.each_with_object({}) { |word, hash| hash[word.downcase] ||= word.length }
     end
 
     def word_count
