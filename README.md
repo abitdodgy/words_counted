@@ -1,10 +1,6 @@
 # WordsCounted
 
-WordsCounted is a highly customisable Ruby string analyser. It includes many handy utility methods that go beyond word counting. You can use this gem to get word density, words and the number of times they occur, the highest occurring words, and few more things.
-
-I use *word* loosely since you can pass the program any string you want: words, numbers, characters, etc...
-
-Pass your own regular expression to customise the criteria for splitting strings. This makes WordsCounted very flexible, whether you want to count words, numbers, or special characters.
+WordsCounted is a highly customisable Ruby text analyser. Consult the features for more information.
 
 ### Demo
 
@@ -27,9 +23,9 @@ Visit [the gem's website][4] for a demo.
 * Customisable criteria. Pass your own regexp rules to split strings if you prefer. The default regexp has two features:
   * Filters special characters but respects hyphens and apostrophes.
   * Plays nicely with diacritics (UTF and unicode characters): "São Paulo" is treated as `["São", "Paulo"]` and not `["S", "", "o", "Paulo"]`.
-* Pass in a file path or a url instead of a string. WordsCounted opens and reads files.
+* Opens and reads files. Pass in a file path or a url instead of a string.
 
-See usage instructions for details on each feature.
+See usage instructions for more details.
 
 ## Installation
 
