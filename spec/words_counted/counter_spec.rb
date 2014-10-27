@@ -218,6 +218,11 @@ module WordsCounted
       it "returns the number of unique words" do
         expect(counter.unique_word_count).to eq(13)
       end
+
+      it "is case insensitive" do
+        counter = Counter.new("Up down. Down up.")
+        expect(counter.unique_word_count).to eq(2)
+      end
     end
   end
 

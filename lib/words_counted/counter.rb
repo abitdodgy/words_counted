@@ -24,7 +24,7 @@ module WordsCounted
     end
 
     def unique_word_count
-      words.uniq.size
+      words.map(&:downcase).uniq.size
     end
 
     def average_chars_per_word(precision = 2)
