@@ -13,10 +13,10 @@ module WordsCounted
     def initialize(string, options = {})
       @options = options
       exclude = filter_proc(options[:exclude])
-      @words = string.scan(regexp).reject { |word| exclude.call(word) }
+      @words = string.scan(regexp).map(&:downcase).reject { |word| exclude.call(word) }
       @char_count = words.join.size
-      @word_occurrences = words.each_with_object(Hash.new(0)) { |word, hash| hash[word.downcase] += 1 }
-      @word_lengths = words.each_with_object({}) { |word, hash| hash[word.downcase] ||= word.length }
+      @word_occurrences = words.each_with_object(Hash.new(0)) { |word, hash| hash[word] += 1 }
+      @word_lengths = words.each_with_object({}) { |word, hash| hash[word] ||= word.length }
     end
 
     def word_count
@@ -24,7 +24,7 @@ module WordsCounted
     end
 
     def unique_word_count
-      words.map(&:downcase).uniq.size
+      words.uniq.size
     end
 
     def average_chars_per_word(precision = 2)
@@ -54,6 +54,10 @@ module WordsCounted
       sort_by_descending_value word_lengths
     end
 
+    def count(match)
+      words.select { |word| word == match.downcase }.size
+    end
+
   private
 
     def highest_ranking(entries)
@@ -77,14 +81,14 @@ module WordsCounted
       elsif filter.respond_to?(:to_str)
         exclusion_list = filter.split.collect(&:downcase)
         ->(word) {
-          exclusion_list.include?(word.downcase)
+          exclusion_list.include?(word)
         }
       elsif regexp_filter = Regexp.try_convert(filter)
         Proc.new { |word| word =~ regexp_filter }
       elsif filter.respond_to?(:to_proc)
         filter.to_proc
       else
-        raise ArgumentError, "Filter must String, Array, Lambda, or Regexp"
+        raise ArgumentError, "Filter must String, Array, Lambda, or a Regexp"
       end
     end
   end

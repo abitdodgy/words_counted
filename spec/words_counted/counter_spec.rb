@@ -33,62 +33,62 @@ module WordsCounted
       end
 
       it "splits words" do
-        expect(counter.words).to eq(%w[We are all in the gutter but some of us are looking at the stars])
+        expect(counter.words).to eq(%w[we are all in the gutter but some of us are looking at the stars])
       end
 
       it "removes special characters" do
         counter = Counter.new("Hello! # $ % 12345 * & % How do you do?")
-        expect(counter.words).to eq(%w[Hello How do you do])
+        expect(counter.words).to eq(%w[hello how do you do])
       end
 
       it "counts hyphenated words as one" do
         counter = Counter.new("I am twenty-two.")
-        expect(counter.words).to eq(%w[I am twenty-two])
+        expect(counter.words).to eq(%w[i am twenty-two])
       end
 
       it "does not split words on apostrophe" do
         counter = Counter.new("Bust 'em! Them be Jim's bastards'.")
-        expect(counter.words).to eq(%w[Bust 'em Them be Jim's bastards'])
+        expect(counter.words).to eq(%w[bust 'em them be jim's bastards'])
       end
 
       it "does not split on unicode chars" do
         counter = Counter.new("São Paulo")
-        expect(counter.words).to eq(%w[São Paulo])
+        expect(counter.words).to eq(%w[são paulo])
       end
 
       it "it accepts a string filter" do
         counter = Counter.new("That was magnificent, Trevor.", exclude: "magnificent")
-        expect(counter.words).to eq(%w[That was Trevor])
+        expect(counter.words).to eq(%w[that was trevor])
       end
 
       it "it accepts a string filter with multiple words" do
         counter = Counter.new("That was magnificent, Trevor.", exclude: "was magnificent")
-        expect(counter.words).to eq(%w[That Trevor])
+        expect(counter.words).to eq(%w[that trevor])
       end
 
       it "filters words in uppercase when using a string filter" do
         counter = Counter.new("That was magnificent, Trevor.", exclude: "Magnificent")
-        expect(counter.words).to eq(%w[That was Trevor])
+        expect(counter.words).to eq(%w[that was trevor])
       end
 
       it "accepts a regexp filter" do
         counter = Counter.new("That was magnificent, Trevor.", exclude: /magnificent/i)
-        expect(counter.words).to eq(%w[That was Trevor])
+        expect(counter.words).to eq(%w[that was trevor])
       end
 
       it "accepts an array filter" do
         counter = Counter.new("That was magnificent, Trevor.", exclude: ['That', 'was'])
-        expect(counter.words).to eq(%w[magnificent Trevor])
+        expect(counter.words).to eq(%w[magnificent trevor])
       end
 
       it "accepts a lambda filter" do
-        counter = Counter.new("That was magnificent, Trevor.", exclude: ->(w) {w == 'That'})
-        expect(counter.words).to eq(%w[was magnificent Trevor])
+        counter = Counter.new("That was magnificent, Trevor.", exclude: ->(w) { w == 'that' })
+        expect(counter.words).to eq(%w[was magnificent trevor])
       end
 
       it "accepts a custom regexp" do
         counter = Counter.new("I am 007.", regexp: /[\p{Alnum}\-']+/)
-        expect(counter.words).to eq(["I", "am", "007"])
+        expect(counter.words).to eq(["i", "am", "007"])
       end
 
       it "char_count should be calculated after the filter is applied" do
@@ -223,6 +223,13 @@ module WordsCounted
         counter = Counter.new("Up down. Down up.")
         expect(counter.unique_word_count).to eq(2)
       end
+    end
+  end
+
+  describe "count" do
+    it "returns count for a single word" do
+      counter = Counter.new("I am so clever that sometimes I don't understand a single word of what I am saying.")
+      expect(counter.count("i")).to eq(3)
     end
   end
 

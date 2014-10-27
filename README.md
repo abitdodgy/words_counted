@@ -1,10 +1,14 @@
-# Words Counted
+# WordsCounted
 
-Words Counted is a highly customisable Ruby string analyser. It includes many handy utility methods that go beyond word counting. You can use this gem to get word density, words and the number of times they occur, the highest occurring words, and few more things.
+WordsCounted is a highly customisable Ruby string analyser. It includes many handy utility methods that go beyond word counting. You can use this gem to get word density, words and the number of times they occur, the highest occurring words, and few more things.
 
 I use *word* loosely since you can pass the program any string you want: words, numbers, characters, etc...
 
-Pass your own regular expression to customise the criteria for splitting strings. This makes Words Counted very flexible, whether you want to count words, numbers, or special characters.
+Pass your own regular expression to customise the criteria for splitting strings. This makes WordsCounted very flexible, whether you want to count words, numbers, or special characters.
+
+### Demo
+
+Visit [the gem's website][4] for a demo.
 
 ### Features
 
@@ -22,7 +26,7 @@ Pass your own regular expression to customise the criteria for splitting strings
 * Customisable criteria. Pass your own regexp rules to split strings if you prefer. The default regexp has two features:
   * Filters special characters but respects hyphens and apostrophes.
   * Plays nicely with diacritics (UTF and unicode characters): "São Paulo" is treated as `["São", "Paulo"]` and not `["S", "", "o", "Paulo"]`.
-* Pass in a file path or a url instead of a string. Words Counted opens and reads files.
+* Pass in a file path or a url instead of a string. WordsCounted opens and reads files.
 
 See usage instructions for details on each feature.
 
@@ -40,7 +44,7 @@ Or install it yourself as:
 
     $ gem install words_counted
 
-## Usage
+## Quick usage
 
 Pass in a string or a file path, and an optional filter and/or regexp.
 
@@ -53,7 +57,31 @@ counter = WordsCounted.count(
 counter = WordsCounted.from_file("path/or/url/to/my/file.txt")
 ```
 
-### API
+## API
+
+### Class methods
+
+#### `count(string, options = {})`
+
+Initializes an analyser object.
+
+```ruby
+counter = WordsCounted.count("Hello Beirut!")
+````
+
+Accepts two options: `exclude` and `regexp`. See [Excluding words from the analyser][5] and [Passing in a custom regexp][6] respectively.
+
+#### from_file(path, options = {})
+
+Initializes an analyser object from a file path.
+
+```ruby
+counter = WordsCounted.count("Hello Beirut!")
+````
+
+Accepts the same options as `count()`.
+
+### Instance methods
 
 #### `.word_count`
 
@@ -74,22 +102,14 @@ counter.word_occurrences
   "we"      => 1,
   "are"     => 2,
   "all"     => 1,
-  "in"      => 1,
-  "the"     => 2,
-  "gutter"  => 1,
-  "but"     => 1,
-  "some"    => 1,
-  "of"      => 1,
-  "us"      => 1,
-  "looking" => 1,
-  "at"      => 1,
+  # ...
   "stars"   => 1
 }
 ```
 
 #### `.sorted_word_occurrences`
 
-Returns a two dimentional array of words and their number of occurrences sorted in descending order. Uppercase and lowercase words are counted as the same word.
+Returns a two dimensional array of words and their number of occurrences sorted in descending order. Uppercase and lowercase words are counted as the same word.
 
 ```ruby
 counter.sorted_word_occurrences
@@ -124,22 +144,14 @@ counter.word_lengths
   "We"      => 2,
   "are"     => 3,
   "all"     => 3,
-  "in"      => 2,
-  "the"     => 3,
-  "gutter"  => 6,
-  "but"     => 3,
-  "some"    => 4,
-  "of"      => 2,
-  "us"      => 2,
-  "looking" => 7,
-  "at"      => 2,
+  # ...
   "stars"   => 5
 }
 ```
 
 #### `.sorted_word_lengths`
 
-Returns a two dimentional array of words and their lengths sorted in descending order.
+Returns a two dimensional array of words and their lengths sorted in descending order.
 
 ```ruby
 counter.sorted_word_lengths
@@ -174,7 +186,7 @@ counter.words
 
 #### `.word_density([ precision = 2 ])`
 
-Returns a two-dimentional array of words and their density to a precision of two. It accepts a precision argument which defaults to two.
+Returns a two-dimensional array of words and their density to a precision of two. It accepts a precision argument which defaults to two.
 
 ```ruby
 counter.word_density
@@ -183,15 +195,7 @@ counter.word_density
   ["are",     13.33],
   ["the",     13.33],
   ["but",     6.67 ],
-  ["us",      6.67 ],
-  ["of",      6.67 ],
-  ["some",    6.67 ],
-  ["looking", 6.67 ],
-  ["gutter",  6.67 ],
-  ["at",      6.67 ],
-  ["in",      6.67 ],
-  ["all",     6.67 ],
-  ["stars",   6.67 ],
+  # ...
   ["we",      6.67 ]
 ]
 ```
@@ -214,10 +218,18 @@ counter.average_chars_per_word  #=> 4
 
 #### `.unique_word_count`
 
-Returns the count of unique words in the string.
+Returns the count of unique words in the string. This is case insensitive.
 
 ```ruby
 counter.unique_word_count       #=> 13
+```
+
+#### `.count(word)`
+
+Counts the occurrence of a word in the string.
+
+```ruby
+counter.count("are")            #=> 2
 ```
 
 ## Excluding words from the analyser
@@ -310,17 +322,21 @@ In this example `-you` and `you` are counted as separate words. Writers should u
 
 Another gotcha is that the default criteria does not include numbers in its analysis. Remember that you can pass your own regular expression if the default behaviour does not fit your needs.
 
+### A note on case sensitivity
+
+The program will downcase all incoming strings for consistency.
+
 ## Road Map
 
 1. Add ability to open URLs.
 2. Add paragraph, sentence, average words per sentence, and average sentence chars counters.
 
-#### Ability to open URLs
+#### Ability to read URLs
 
 Something like...
 
 ```ruby
-def self.count_from_url
+def self.from_url
   # open url and send string here after removing html
 end
 ```
@@ -335,7 +351,7 @@ end
 
 Originally I wrote this program for a code challenge on Treehouse. You can find the original implementation on [Code Review][1].
 
-## Contributers
+## Contributors
 
 Thanks to Dave Yarwood for helping me improve my code. Some of my code is based on his recommendations. You can find the original program implementation, as well as Dave's code review, on [Code Review][1].
 
@@ -353,3 +369,6 @@ Thanks to [Wayne Conrad][2] for providing [an excellent code review][3], and imp
   [1]: http://codereview.stackexchange.com/questions/46105/a-ruby-string-analyser
   [2]: https://github.com/wconrad
   [3]: http://codereview.stackexchange.com/a/49476/1563
+  [4]: http://rubywordcount.com
+  [5]: https://github.com/abitdodgy/words_counted#excluding-words-from-the-analyser
+  [6]: https://github.com/abitdodgy/words_counted#passing-in-a-custom-regexp
