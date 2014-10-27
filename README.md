@@ -22,6 +22,7 @@ Visit [the gem's website][4] for a demo.
     * A hash map of words and their lengths
     * The longest word(s) and its length
     * The most occurring word(s) and its number of occurrences.
+    * Count invividual strings for occurrences.
 * A flexible way to exclude words (or anything) from the count. You can pass a **string**, a **regexp**, an **array**, or a **lambda**.
 * Customisable criteria. Pass your own regexp rules to split strings if you prefer. The default regexp has two features:
   * Filters special characters but respects hyphens and apostrophes.
@@ -44,7 +45,7 @@ Or install it yourself as:
 
     $ gem install words_counted
 
-## Quick usage
+## Usage
 
 Pass in a string or a file path, and an optional filter and/or regexp.
 
@@ -71,12 +72,12 @@ counter = WordsCounted.count("Hello Beirut!")
 
 Accepts two options: `exclude` and `regexp`. See [Excluding words from the analyser][5] and [Passing in a custom regexp][6] respectively.
 
-#### from_file(path, options = {})
+#### `from_file(path, options = {})`
 
 Initializes an analyser object from a file path.
 
 ```ruby
-counter = WordsCounted.count("Hello Beirut!")
+counter = WordsCounted.count("hello_beirut.txt")
 ````
 
 Accepts the same options as `count()`.
