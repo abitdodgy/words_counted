@@ -2,6 +2,10 @@
 
 WordsCounted is a highly customisable Ruby text analyser. Consult the features for more information.
 
+<a href="http://badge.fury.io/rb/words_counted">
+  <img src="https://badge.fury.io/rb/words_counted@2x.png" alt="Gem Version" height="18">
+</a>
+
 ### Demo
 
 Visit [the gem's website][4] for a demo.
