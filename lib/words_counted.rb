@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require "words_counted/version"
 require "words_counted/counter"
 
