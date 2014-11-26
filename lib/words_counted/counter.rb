@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module WordsCounted
   class Counter
     attr_reader :words, :word_occurrences, :word_lengths, :char_count
