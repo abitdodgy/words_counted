@@ -29,7 +29,7 @@ module WordsCounted
     end
 
     def average_chars_per_word(precision = 2)
-      (char_count.to_f / word_count.to_f).round(precision)
+      (char_count / word_count.to_f).round(precision)
     end
 
     def most_occurring_words
@@ -42,7 +42,7 @@ module WordsCounted
 
     def word_density(precision = 2)
       word_densities = word_occurrences.each_with_object({}) do |(word, occ), hash|
-        hash[word] = (occ.to_f / word_count.to_f * 100).round(precision)
+        hash[word] = (occ / word_count.to_f * 100).round(precision)
       end
       sort_by_descending_value word_densities
     end
