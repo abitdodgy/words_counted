@@ -373,3 +373,7 @@ Thanks to [Wayne Conrad][2] for providing [an excellent code review][3], and imp
   [4]: http://rubywordcount.com
   [5]: https://github.com/abitdodgy/words_counted#excluding-words-from-the-analyser
   [6]: https://github.com/abitdodgy/words_counted#passing-in-a-custom-regexp
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/abitdodgy/words_counted/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
