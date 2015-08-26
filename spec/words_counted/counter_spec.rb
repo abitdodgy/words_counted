@@ -134,6 +134,11 @@ module WordsCounted
         counter = Counter.new("Orange orange Apple apple banana")
         expect(counter.most_occurring_words).to eq([["orange", 2],["apple", 2]])
       end
+
+      it "returns empty array when input is empty string" do
+        counter = Counter.new("")
+        expect(counter.most_occurring_words).to eq([])
+      end
     end
 
     describe 'word_lengths' do

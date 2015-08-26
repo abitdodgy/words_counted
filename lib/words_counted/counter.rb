@@ -62,7 +62,7 @@ module WordsCounted
   private
 
     def highest_ranking(entries)
-      entries.group_by { |_, value| value }.sort.last.last
+      entries.empty? ? [] : entries.group_by { |_, value| value }.sort.last.last
     end
 
     def sort_by_descending_value(entries)
