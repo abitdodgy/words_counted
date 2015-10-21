@@ -13,10 +13,8 @@ module WordsCounted
         tokens = Tokeniser.new("We Are ALL in the Gutter").tokens
         expect(tokens).to eq(%w[we are all in the gutter])
       end
-    end
 
-    describe "#tokens" do
-      context "without additional arguments" do
+      context "with only the required arguments" do
         it "returns an array or normalised tokens" do
           tokens = Tokeniser.new("We are all in the gutter, but some of us are looking at the stars.").tokens
           expect(tokens).to eq(%w[we are all in the gutter but some of us are looking at the stars])
@@ -42,8 +40,17 @@ module WordsCounted
           expect(tokens).to eq(%w[bayrūt])
         end
       end
+    end
 
-      context "with :exclude as a string" do
+    context "with `pattern`" do
+      it "splits on accepts a custom pattern" do
+        tokens = Tokeniser.new("We-Are-ALL-in-the-Gutter", pattern: /[^-]+/).tokens
+        expect(tokens).to eq(%w[we are all in the gutter])
+      end
+    end
+
+    context "with `exclude`" do
+      context "with `exclude` as a string" do
         it "it accepts a string filter" do
           tokens = Tokeniser.new("That was magnificent, Trevor.", exclude: "magnificent").tokens
           expect(tokens).to eq(%w[that was trevor])
@@ -57,6 +64,50 @@ module WordsCounted
         it "normalises string filter" do
           tokens = Tokeniser.new("That was magnificent, Trevor.", exclude: "MAGNIFICENT").tokens
           expect(tokens).to eq(%w[that was trevor])
+        end
+      end
+
+      context "with `exclude` as a regular expression" do
+        it "filters on match" do
+          tokens = Tokeniser.new("That was magnificent, Trevor.", exclude: /magnificent/i).tokens
+          expect(tokens).to eq(%w[that was trevor])
+        end
+      end
+
+      context "with `exclude` as a lambda" do
+        it "calls lambda" do
+          tokens = Tokeniser.new("That was magnificent, Trevor.", exclude: ->(token) { token.length < 5 }).tokens
+          expect(tokens).to eq(%w[magnificent trevor])
+        end
+      end
+
+      context "with `exclude` as an array" do
+        it "accepts an array of strings" do
+          tokens = Tokeniser.new("That was magnificent, Trevor.", exclude: ["magnificent"]).tokens
+          expect(tokens).to eq(%w[that was trevor])
+        end
+
+        it "accepts an array regular expressions" do
+          tokens = Tokeniser.new("That was magnificent, Trevor.", exclude: [/that/, /was/]).tokens
+          expect(tokens).to eq(%w[magnificent trevor])
+        end
+
+        it "accepts an array of lambdas" do
+          filters = [->(token) { token.length < 4}, ->(token) { token.length > 6}]
+          tokens = Tokeniser.new("That was magnificent, Trevor.", exclude: filters).tokens
+          expect(tokens).to eq(%w[that trevor])
+        end
+
+        it "accepts a mixed array" do
+          filters = ["that", ->(token) { token.length < 4}, /magnificent/]
+          tokens = Tokeniser.new("That was magnificent, Trevor.", exclude: filters).tokens
+          expect(tokens).to eq(["trevor"])
+        end
+      end
+
+      context "with an invalid filter" do
+        it "raises an `ArgumentError`" do
+          expect { Tokeniser.new("Hello world!", exclude: 1) }.to raise_error(ArgumentError)
         end
       end
     end
