@@ -313,7 +313,7 @@ Originally I wrote this program for a code challenge on Treehouse. You can find 
 
 ## Contributors
 
-See contributors. Not listed there is [Dave Yarwood][1].
+See [contributors][3]. Not listed there is [Dave Yarwood][1].
 
 ## Contributing
 
@@ -326,6 +326,7 @@ See contributors. Not listed there is [Dave Yarwood][1].
 
   [1]: http://codereview.stackexchange.com/questions/46105/a-ruby-string-analyser
   [2]: http://www.rubydoc.info/gems/words_counted
+  [3]: https://github.com/abitdodgy/words_counted/graphs/contributors
   [4]: http://rubywordcount.com
   [5]: https://github.com/abitdodgy/words_counted#excluding-tokens-from-the-analyser
   [6]: https://github.com/abitdodgy/words_counted#passing-in-a-custom-regexp
