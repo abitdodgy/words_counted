@@ -95,7 +95,7 @@ tokeniser = Tokeniser.new("I <3 Beirut!").tokenise(pattern: /[a-z]/i)
 
 See [Excluding tokens from the analyser][5] and [Passing in a custom regexp][6] for more information.
 
-### The `Counter` Class
+### Counter
 
 The `Counter` class allows you to collect various statistics from an array of tokens.
 
@@ -181,7 +181,7 @@ counter.token_density
 Returns the char count of tokens.
 
 ```ruby
-counter.char_count              #=> 76
+counter.char_count #=> 76
 ```
 
 **`#average_chars_per_token([ precision: 2 ])`**
@@ -189,7 +189,7 @@ counter.char_count              #=> 76
 Returns the average char count per token rounded to two decimal places. Accepts a precision argument which defaults to two. Precision must be a float.
 
 ```ruby
-counter.average_chars_per_token  #=> 4
+counter.average_chars_per_token #=> 4
 ```
 
 **`#unique_token_count`**
@@ -197,7 +197,7 @@ counter.average_chars_per_token  #=> 4
 Returns the number unique tokens.
 
 ```ruby
-counter.unique_token_count       #=> 13
+counter.unique_token_count #=> 13
 ```
 
 ## Excluding tokens from the tokeniser
@@ -237,7 +237,9 @@ t.tokenise(exclude: :ascii_only?)
 # => ["محمد"]
 
 # Using an array
-tokeniser = WordsCounted::Tokeniser.new("Hello! اسماءنا هي محمد، كارولينا، سامي، وداني")
+tokeniser = WordsCounted::Tokeniser.new(
+  "Hello! اسماءنا هي محمد، كارولينا، سامي، وداني"
+)
 tokeniser.tokenise(
   exclude: [:ascii_only?, /محمد/, ->(t) { t.length > 6}, "و"]
 )
