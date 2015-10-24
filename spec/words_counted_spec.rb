@@ -13,4 +13,16 @@ describe WordsCounted do
       expect(counter.token_count).to eq(135)
     end
   end
+
+  describe ".count" do
+    it "returns a counter instance with given input as tokens" do
+      counter = WordsCounted.count("We are all in the gutter, but some of us are looking at the stars.")
+      expect(counter.token_count).to eq(15)
+    end
+
+    it "returns a counter instance with given input and options" do
+      counter = WordsCounted.count("We are all in the gutter!", exclude: 'the gutter')
+      expect(counter.tokens).to eq(%w[we are all in])
+    end
+  end
 end

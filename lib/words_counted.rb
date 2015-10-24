@@ -12,7 +12,8 @@ end
 
 module WordsCounted
   def self.count(string, options = {})
-    Counter.new(string, options)
+    tokens = Tokeniser.new(string).tokenise(options)
+    Counter.new(tokens)
   end
 
   def self.from_file(path, options = {})
