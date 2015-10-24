@@ -4,7 +4,6 @@ rvm:
   - 2.1
   - 2.2
   - ruby-head
-  - jruby-9.0.1.0
 
 gemfile:
   - Gemfile
