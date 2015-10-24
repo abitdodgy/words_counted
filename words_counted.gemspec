@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.version       = WordsCounted::VERSION
   spec.authors       = ["Mohamad El-Husseini"]
   spec.email         = ["husseini.mel@gmail.com"]
-  spec.description   = %q{A Ruby word counter and string analyser with helpful utility methods.}
+  spec.description   = %q{A Ruby natural language processor to extract stats from text, such was word count and more.}
   spec.summary       = %q{See README.}
   spec.homepage      = "https://github.com/abitdodgy/words_counted"
   spec.license       = "MIT"

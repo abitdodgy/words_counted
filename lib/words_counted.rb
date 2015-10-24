@@ -1,6 +1,9 @@
 # -*- encoding : utf-8 -*-
-require "words_counted/version"
+require "refinements/hash_refinements"
+
+require "words_counted/tokeniser"
 require "words_counted/counter"
+require "words_counted/version"
 
 begin
   require "pry"
@@ -9,10 +12,14 @@ end
 
 module WordsCounted
   def self.count(string, options = {})
-    Counter.new(string, options)
+    tokens = Tokeniser.new(string).tokenise(options)
+    Counter.new(tokens)
   end
 
   def self.from_file(path, options = {})
-    Counter.from_file(path, options)
+    tokens = File.open(path) do |file|
+      Tokeniser.new(file.read).tokenise(options)
+    end
+    Counter.new(tokens)
   end
 end

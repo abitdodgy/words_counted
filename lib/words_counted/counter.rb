@@ -1,96 +1,128 @@
 # -*- encoding : utf-8 -*-
+
+require "words_counted/deprecated"
+
 module WordsCounted
+  using Refinements::HashRefinements
+
   class Counter
-    attr_reader :words, :word_occurrences, :word_lengths, :char_count
+    include Deprecated
 
-    WORD_REGEXP = /[\p{Alpha}\-']+/
+    attr_reader :tokens
 
-    def self.from_file(path, options = {})
-      File.open(path) do |file|
-        new file.read, options
-      end
+    def initialize(tokens)
+      @tokens = tokens
     end
 
-    def initialize(string, options = {})
-      @options = options
-      exclude = filter_proc(options[:exclude])
-      @words = string.scan(regexp).map(&:downcase).reject { |word| exclude.call(word) }
-      @char_count = words.join.size
-      @word_occurrences = words.each_with_object(Hash.new(0)) { |word, hash| hash[word] += 1 }
-      @word_lengths = words.each_with_object({}) { |word, hash| hash[word] ||= word.length }
+    # Returns the number of tokens.
+    #
+    # @example
+    #  Counter.new(%w[one two two three three three]).token_count
+    #  # => 6
+    #
+    # @return [Integer]   The number of tokens.
+    def token_count
+      tokens.size
     end
 
-    def word_count
-      words.size
+    # Returns the number of unique tokens.
+    #
+    # @example
+    #  Counter.new(%w[one two two three three three]).uniq_token_count
+    #  # => 3
+    #
+    # @return [Integer]   The number of unique tokens.
+    def uniq_token_count
+      tokens.uniq.size
     end
 
-    def unique_word_count
-      words.uniq.size
+    # Returns the character count of all tokens.
+    #
+    # @example
+    #  Counter.new(%w[one two]).char_count
+    #  # => 6
+    #
+    # @return [Integer]   The total char count of tokens.
+    def char_count
+      tokens.join.size
     end
 
-    def average_chars_per_word(precision = 2)
-      (char_count / word_count.to_f).round(precision)
+    # Returns a sorted two-dimensional array where each member array is a token and its frequency.
+    # The array is sorted by frequency in descending order.
+    #
+    # @example
+    #  Counter.new(%w[one two two three three three]).token_frequency
+    #  # => [ ['three', 3], ['two', 2], ['one', 1] ]
+    #
+    # @return [Array<Array<String, Integer>>]
+    def token_frequency
+      tokens.each_with_object(Hash.new(0)) { |token, hash| hash[token] += 1 }.sort_by_value_desc
     end
 
-    def most_occurring_words
-      highest_ranking word_occurrences
+    # Returns a sorted two-dimensional array where each member array is a token and its length.
+    # The array is sorted by length in descending order.
+    #
+    # @example
+    #  Counter.new(%w[one two three four five]).token_lenghts
+    #  # => [ ['three', 5], ['four', 4], ['five', 4], ['one', 3], ['two', 3] ]
+    #
+    # @return [Array<Array<String, Integer>>]
+    def token_lengths
+      tokens.uniq.each_with_object({}) { |token, hash| hash[token] = token.length }.sort_by_value_desc
     end
 
-    def longest_words
-      highest_ranking word_lengths
+    # Returns a sorted two-dimensional array where each member array is a token and its density
+    # as a float, rounded to a precision of two decimal places. It accepts a precision argument
+    # which defaults to `2`.
+    #
+    # @example
+    #  Counter.new(%w[Maj. Major Major Major]).token_density
+    #  # => [ ['major', .75], ['maj', .25] ]
+    #
+    # @example with `precision`
+    #  Counter.new(%w[Maj. Major Major Major]).token_density(precision: 4)
+    #  # => [ ['major', .7500], ['maj', .2500] ]
+    #
+    # @param [Integer] precision              The number of decimal places to round density to.
+    # @return [Array<Array<String, Float>>]
+    def token_density(precision: 2)
+      token_frequency.each_with_object({}) { |(token, freq), hash|
+        hash[token] = (freq / token_count.to_f).round(precision)
+      }.sort_by_value_desc
     end
 
-    def word_density(precision = 2)
-      word_densities = word_occurrences.each_with_object({}) do |(word, occ), hash|
-        hash[word] = (occ / word_count.to_f * 100).round(precision)
-      end
-      sort_by_descending_value word_densities
+    # Returns a hash of tokens and their frequencies for tokens with the highest frequency.
+    #
+    # @example
+    #  Counter.new(%w[one once two two twice twice]).most_frequent_tokens
+    #  # => { 'two' => 2, 'twice' => 2 }
+    #
+    # @return [Hash<String, Integer>]
+    def most_frequent_tokens
+      token_frequency.group_by(&:last).max.last.to_h
     end
 
-    def sorted_word_occurrences
-      sort_by_descending_value word_occurrences
+    # Returns a hash of tokens and their lengths for tokens with the highest length.
+    #
+    # @example
+    #  Counter.new(%w[one three five seven]).longest_tokens
+    #  # => { 'three' => 5, 'seven' => 5 }
+    #
+    # @return [Hash<String, Integer>]
+    def longest_tokens
+      token_lengths.group_by(&:last).max.last.to_h
     end
 
-    def sorted_word_lengths
-      sort_by_descending_value word_lengths
-    end
-
-    def count(match)
-      words.select { |word| word == match.downcase }.size
-    end
-
-  private
-
-    def highest_ranking(entries)
-      entries.empty? ? [] : entries.group_by { |_, value| value }.sort.last.last
-    end
-
-    def sort_by_descending_value(entries)
-      entries.sort_by { |_, value| value }.reverse
-    end
-
-    def regexp
-      @options[:regexp] || WORD_REGEXP
-    end
-
-    def filter_proc(filter)
-      if filter.respond_to?(:to_a)
-        filter_procs = Array(filter).map(&method(:filter_proc))
-        ->(word) {
-          filter_procs.any? { |p| p.call(word) }
-        }
-      elsif filter.respond_to?(:to_str)
-        exclusion_list = filter.split.collect(&:downcase)
-        ->(word) {
-          exclusion_list.include?(word)
-        }
-      elsif regexp_filter = Regexp.try_convert(filter)
-        Proc.new { |word| word =~ regexp_filter }
-      elsif filter.respond_to?(:to_proc)
-        filter.to_proc
-      else
-        raise ArgumentError, "Filter must String, Array, Lambda, or a Regexp"
-      end
+    # Returns the average char count per token rounded to a precision of two decimal places.
+    # Accepts a `precision` argument.
+    #
+    # @example
+    #  Counter.new(%w[one three five seven]).average_chars_per_token
+    #  # => 4.25
+    #
+    # @return [Float]   The average char count per token.
+    def average_chars_per_token(precision: 2)
+      (char_count / token_count.to_f).round(precision)
     end
   end
 end
