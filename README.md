@@ -55,9 +55,7 @@ counter = WordsCounted.from_file("path/or/url/to/my/file.txt")
 
 ## API
 
-### `WordsCounted`
-
-#### `.count(input, options = {})`
+**`WordsCounted.count(input, options = {})`**
 
 Tokenises input and initializes a `Counter` object with the resulting tokens.
 
@@ -67,7 +65,7 @@ counter = WordsCounted.count("Hello Beirut!")
 
 Accepts two options: `exclude` and `regexp`. See [Excluding tokens from the analyser][5] and [Passing in a custom regexp][6] respectively.
 
-#### `WordsCount.from_file(path, options = {})`
+**`WordsCounted.from_file(path, options = {})`**
 
 Reads and tokenises a file, and initializes a `Counter` object with the resulting tokens.
 
@@ -77,7 +75,7 @@ counter = WordsCounted.count("hello_beirut.txt")
 
 Accepts the same options as `.count`.
 
-### The `Tokeniser` Class
+### Tokeniser
 
 The tokeniser allows you to tokenise text in a variety of ways. You can pass in your own rules for tokenisation, and apply a powerful filter with any combination of rules as long as they can boil down into a lambda.
 
@@ -101,7 +99,7 @@ See [Excluding tokens from the analyser][5] and [Passing in a custom regexp][6] 
 
 The `Counter` class allows you to collect various statistics from an array of tokens.
 
-**`.token_count`**
+**`#token_count`**
 
 Returns the token count of a given string.
 
@@ -109,7 +107,7 @@ Returns the token count of a given string.
 counter.token_count #=> 15
 ```
 
-**`.token_frequency`**
+**`#token_frequency`**
 
 Returns a sorted (unstable) two-dimensional array where each element is a token and its frequency. The array is sorted by frequency in descending order.
 
@@ -125,7 +123,7 @@ counter.token_frequency
 ]
 ```
 
-**`.most_frequent_tokens`**
+**`#most_frequent_tokens`**
 
 Returns a hash where each key-value pair is a token and its frequency.
 
@@ -135,7 +133,7 @@ counter.most_frequent_tokens
 { "are" => 2, "the" => 2 }
 ```
 
-**`.token_lengths`**
+**`#token_lengths`**
 
 Returns a sorted (unstable) two-dimentional array where each element contains a token and its length. The array is sorted by length in descending order.
 
@@ -151,7 +149,7 @@ counter.token_lengths
 ]
 ```
 
-**`.longest_tokens`**
+**`#longest_tokens`**
 
 Returns a hash where each key-value pair is a token and its length.
 
@@ -162,7 +160,7 @@ counter.longest_tokens
 { "looking" => 7 }
 ```
 
-**`.token_density([ precision: 2 ])`**
+**`#token_density([ precision: 2 ])`**
 
 Returns a sorted (unstable) two-dimentional array where each element contains a token and its density as a float, rounded to a precision of two. The array is sorted by density in descending order. It accepts a `precision` argument, which must be a float.
 
@@ -178,7 +176,7 @@ counter.token_density
 ]
 ```
 
-**`.char_count`**
+**`#char_count`**
 
 Returns the char count of tokens.
 
@@ -186,7 +184,7 @@ Returns the char count of tokens.
 counter.char_count              #=> 76
 ```
 
-**`.average_chars_per_token([ precision: 2 ])`**
+**`#average_chars_per_token([ precision: 2 ])`**
 
 Returns the average char count per token rounded to two decimal places. Accepts a precision argument which defaults to two. Precision must be a float.
 
@@ -194,7 +192,7 @@ Returns the average char count per token rounded to two decimal places. Accepts 
 counter.average_chars_per_token  #=> 4
 ```
 
-**`.unique_token_count`**
+**`#unique_token_count`**
 
 Returns the number unique tokens.
 
@@ -212,34 +210,38 @@ You can exclude anything you want from the input by passing the `exclude` option
 4. A symbol that is convertible to a proc.  For example `:odd?`.
 5. An array of any combination of the above.
 
-#### Using a string
 ```ruby
-WordsCounted.count(
-  "Magnificent! That was magnificent, Trevor.", exclude: "was magnificent"
+tokeniser =
+  WordsCounted::Tokeniser.new(
+    "Magnificent! That was magnificent, Trevor.", exclude: "was magnificent"
+  )
+
+# Using a string
+tokeniser.tokenise(exclude: "was magnificent")
+tokeniser.tokens
+# => ["that", "trevor"]
+
+# Using a regular expression
+tokeniser.tokenise(exclude: /Trevor/)
+counter.tokens
+# => ["that", "was", "magnificent"]
+
+# Using a lambda
+tokeniser.tokenise(exclude: ->(t) { t.length < 4 })
+counter.tokens
+# => ["magnificent", "trevor"]
+
+# Using symbol
+tokeniser = WordsCounted::Tokeniser.new("Hello! محمد")
+t.tokenise(exclude: :ascii_only?)
+# => ["محمد"]
+
+# Using an array
+tokeniser = WordsCounted::Tokeniser.new("Hello! اسماءنا هي محمد، كارولينا، سامي، وداني")
+tokeniser.tokenise(
+  exclude: [:ascii_only?, /محمد/, ->(t) { t.length > 6}, "و"]
 )
-counter.tokens
-#=> ["That", "Trevor"]
-```
-
-#### Using a regular expression
-```ruby
-WordsCounted.count("Hello Beirut", exclude: /Beirut/)
-counter.tokens
-#=> ["Hello"]
-```
-
-#### Using a lambda
-```ruby
-WordsCounted.count("1 2 3 4 5 6", regexp: /[0-9]/, exclude: ->(w) { w.to_i.even? })
-counter.tokens
-#=> ["1", "3", "5"]
-```
-
-#### Using an array
-```ruby
-t = WordsCounted::Tokeniser.new("Hello! اسماءنا هي محمد، كارولينا، سامي، وداني")
-t.tokenise(exclude: [:ascii_only?, /محمد/, ->(t) { t.length > 6}, "و"])
-# => => ["هي", "سامي", "ودان"]
+# => ["هي", "سامي", "ودان"]
 ```
 
 ## Passing in a Custom Regexp
