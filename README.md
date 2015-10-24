@@ -12,7 +12,7 @@ Visit [this website][4] for an example of what the gem can do.
 
 ### Features
 
-* Out of the box, get the following data from any string or readable file:
+* Out of the box, get the following data from any string or readable file, or URL:
     * Token count and unique token count
     * Token densities, frequencies, and lengths
     * Char count and average chars per token
@@ -40,7 +40,7 @@ Or install it yourself as:
 
 ## Usage
 
-You can use the `Tokenisier` Pass in a string or a file path, and an optional filter and/or regexp.
+Pass in a string or a file path, and an optional filter and/or regexp.
 
 ```ruby
 counter = WordsCounted.count(
@@ -51,15 +51,15 @@ counter = WordsCounted.count(
 counter = WordsCounted.from_file("path/or/url/to/my/file.txt")
 ```
 
-`.count` and `from_file` are convenience methods that take an input, tokenise it, and return an instance of `Counter` initialized with the tokens. The `Tokeniser` and `Counter` classes can be used stand-alone, however.
+`.count` and `.from_file` are convenience methods that take an input, tokenise it, and return an instance of `Counter` initialized with the tokens. The `Tokeniser` and `Counter` classes can be used alone, however.
 
 ## API
 
-### WordsCounted
+### `WordsCounted`
 
-#### `WordsCount.count(string, options = {})`
+#### `.count(input, options = {})`
 
-Tokenises input and initializes an `Counter` object.
+Tokenises input and initializes a `Counter` object with the resulting tokens.
 
 ```ruby
 counter = WordsCounted.count("Hello Beirut!")
@@ -69,21 +69,21 @@ Accepts two options: `exclude` and `regexp`. See [Excluding tokens from the anal
 
 #### `WordsCount.from_file(path, options = {})`
 
-Reads and tokenises a file, and initializes a `Counter` object.
+Reads and tokenises a file, and initializes a `Counter` object with the resulting tokens.
 
 ```ruby
 counter = WordsCounted.count("hello_beirut.txt")
 ````
 
-Accepts the same options as `.count()`.
+Accepts the same options as `.count`.
 
-### `Tokeniser`
+### The `Tokeniser` Class
 
 The tokeniser allows you to tokenise text in a variety of ways. You can pass in your own rules for tokenisation, and apply a powerful filter with any combination of rules as long as they can boil down into a lambda.
 
 Out of the box the tokeniser includes only alpha chars. Hyphenated tokens and tokens with apostrophes are considered a single token.
 
-### `#tokenise([pattern: TOKEN_REGEXP, exclude: nil])`
+**`#tokenise([pattern: TOKEN_REGEXP, exclude: nil])`**
 
 ```ruby
 tokeniser = Tokeniser.new("Hello Beirut!").tokenise
@@ -92,16 +92,16 @@ tokeniser = Tokeniser.new("Hello Beirut!").tokenise
 tokeniser = Tokeniser.new("Hello Beirut!").tokenise(exclude: "hello")
 
 # With `pattern`
-tokeniser = Tokeniser.new("Hello Beirut!").tokenise(pattern: /[a-z]/i)
+tokeniser = Tokeniser.new("I <3 Beirut!").tokenise(pattern: /[a-z]/i)
 ```
 
 See [Excluding tokens from the analyser][5] and [Passing in a custom regexp][6] for more information.
 
-### `Counter`
+### The `Counter` Class
 
 The `Counter` class allows you to collect various statistics from an array of tokens.
 
-#### `.token_count`
+**`.token_count`**
 
 Returns the token count of a given string.
 
@@ -109,7 +109,7 @@ Returns the token count of a given string.
 counter.token_count #=> 15
 ```
 
-#### `.token_frequency`
+**`.token_frequency`**
 
 Returns a sorted (unstable) two-dimensional array where each element is a token and its frequency. The array is sorted by frequency in descending order.
 
@@ -125,7 +125,7 @@ counter.token_frequency
 ]
 ```
 
-#### `.most_frequent_tokens`
+**`.most_frequent_tokens`**
 
 Returns a hash where each key-value pair is a token and its frequency.
 
@@ -135,7 +135,7 @@ counter.most_frequent_tokens
 { "are" => 2, "the" => 2 }
 ```
 
-#### `.token_lengths`
+**`.token_lengths`**
 
 Returns a sorted (unstable) two-dimentional array where each element contains a token and its length. The array is sorted by length in descending order.
 
@@ -151,7 +151,7 @@ counter.token_lengths
 ]
 ```
 
-#### `.longest_tokens`
+**`.longest_tokens`**
 
 Returns a hash where each key-value pair is a token and its length.
 
@@ -162,7 +162,7 @@ counter.longest_tokens
 { "looking" => 7 }
 ```
 
-#### `.token_density([ precision: 2 ])`
+**`.token_density([ precision: 2 ])`**
 
 Returns a sorted (unstable) two-dimentional array where each element contains a token and its density as a float, rounded to a precision of two. The array is sorted by density in descending order. It accepts a `precision` argument, which must be a float.
 
@@ -178,7 +178,7 @@ counter.token_density
 ]
 ```
 
-#### `.char_count`
+**`.char_count`**
 
 Returns the char count of tokens.
 
@@ -186,7 +186,7 @@ Returns the char count of tokens.
 counter.char_count              #=> 76
 ```
 
-#### `.average_chars_per_token([ precision: 2 ])`
+**`.average_chars_per_token([ precision: 2 ])`**
 
 Returns the average char count per token rounded to two decimal places. Accepts a precision argument which defaults to two. Precision must be a float.
 
@@ -194,7 +194,7 @@ Returns the average char count per token rounded to two decimal places. Accepts 
 counter.average_chars_per_token  #=> 4
 ```
 
-#### `.unique_token_count`
+**`.unique_token_count`**
 
 Returns the number unique tokens.
 
@@ -276,17 +276,14 @@ A hyphen used in leu of an *em* or *en* dash will form part of the token. This a
 counter = WordsCounted.count("How do you do?-you are well, I see.")
 counter.token_frequency
 
-{
-  "how"   => 1,
-  "do"    => 2,
-  "you"   => 1,
-  "-you"  => 1, # WTF, mate!
-  "are"   => 1,
-  "very"  => 1,
-  "well"  => 1,
-  "i"     => 1,
-  "see"   => 1
-}
+[
+  ["do",   2],
+  ["how",  1],
+  ["you",  1],
+  ["-you", 1], # WTF, mate!
+  ["are",  1],
+  # ...
+]
 ```
 
 In this example `-you` and `you` are separate tokens. Also, the tokeniser does not include numbers by default. Remember that you can pass your own regular expression if the default behaviour does not fit your needs.
