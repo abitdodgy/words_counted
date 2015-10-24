@@ -70,7 +70,7 @@ module WordsCounted
     #  # => ["هي", "سامي", "ودان"]
     #
     # @param [Regexp] pattern   The string to tokenise.
-    # @param [Array<String, Regexp, Lambda, Symbol>, String, Regexp, Lambda, Symbol nil] exclude     The filter to apply.
+    # @param [Array<String, Regexp, Lambda, Symbol>, String, Regexp, Lambda, Symbol, nil] exclude     The filter to apply.
     # @return [Array] the array of filtered tokens.
     def tokenise(pattern: TOKEN_REGEXP, exclude: nil)
       filter_proc = filter_to_proc(exclude)

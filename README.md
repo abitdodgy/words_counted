@@ -1,6 +1,6 @@
 # WordsCounted
 
-WordsCounted is a Ruby NLP (natural language processor). WordsCounted lets you implement powerful tokensation strategies with a very flexible tokeniser. Consult the features for more information.
+WordsCounted is a Ruby NLP (natural language processor). WordsCounted lets you implement powerful tokensation strategies with a very flexible tokeniser class. [Consult the documentation][2] for more information.
 
 <a href="http://badge.fury.io/rb/words_counted">
   <img src="https://badge.fury.io/rb/words_counted@2x.png" alt="Gem Version" height="18">
@@ -8,23 +8,18 @@ WordsCounted is a Ruby NLP (natural language processor). WordsCounted lets you i
 
 ### Demo
 
-Visit [the gem's website][4] for a demo.
+Visit [this website][4] for an example of what the gem can do.
 
 ### Features
 
-* Get the following data from any string or readable file:
-    * Token count
-    * Unique token count
-    * Token density
-    * Char count
-    * Averagechars per token
-    * Token frequency
-    * Token lengths
+* Out of the box, get the following data from any string or readable file:
+    * Token count and unique token count
+    * Token densities, frequencies, and lengths
+    * Char count and average chars per token
     * The longest tokens and their lengths
     * The most frequent tokens and their frequencies.
 * A flexible way to exclude tokens from the tokeniser. You can pass a **string**, **regexp**, **symbol**, **lambda**, or an **array** of any combination of those types for powerful tokenisation strategies.
-* Pass your own regexp rules to the tokeniser if you prefer. The default regexp filters special characters but keeps hyphens and apostrophes.
-  * Plays nicely with diacritics (UTF and unicode characters): "Bayrūt" is treated as `["Bayrūt"]` and not `["Bayr", "ū", "t"]`.
+* Pass your own regexp rules to the tokeniser if you prefer. The default regexp filters special characters but keeps hyphens and apostrophes. It also plays nicely with diacritics (UTF and unicode characters): "Bayrūt" is treated as `["Bayrūt"]` and not `["Bayr", "ū", "t"]`, for example.
 * Opens and reads files. Pass in a file path or a url instead of a string.
 
 See usage instructions for more details.
@@ -45,7 +40,7 @@ Or install it yourself as:
 
 ## Usage
 
-Pass in a string or a file path, and an optional filter and/or regexp.
+You can use the `Tokenisier` Pass in a string or a file path, and an optional filter and/or regexp.
 
 ```ruby
 counter = WordsCounted.count(
@@ -56,13 +51,15 @@ counter = WordsCounted.count(
 counter = WordsCounted.from_file("path/or/url/to/my/file.txt")
 ```
 
+`.count` and `from_file` are convenience methods that take an input, tokenise it, and return an instance of `Counter` initialized with the tokens. The `Tokeniser` and `Counter` classes can be used stand-alone, however.
+
 ## API
 
-### Class methods
+### WordsCounted
 
-#### `count(string, options = {})`
+#### `WordsCount.count(string, options = {})`
 
-Initializes an analyser object.
+Tokenises input and initializes an `Counter` object.
 
 ```ruby
 counter = WordsCounted.count("Hello Beirut!")
@@ -70,9 +67,9 @@ counter = WordsCounted.count("Hello Beirut!")
 
 Accepts two options: `exclude` and `regexp`. See [Excluding tokens from the analyser][5] and [Passing in a custom regexp][6] respectively.
 
-#### `from_file(path, options = {})`
+#### `WordsCount.from_file(path, options = {})`
 
-Initializes an analyser object from a file path.
+Reads and tokenises a file, and initializes a `Counter` object.
 
 ```ruby
 counter = WordsCounted.count("hello_beirut.txt")
@@ -80,13 +77,33 @@ counter = WordsCounted.count("hello_beirut.txt")
 
 Accepts the same options as `.count()`.
 
-### Counter
+### `Tokeniser`
 
-### Instance methods
+The tokeniser allows you to tokenise text in a variety of ways. You can pass in your own rules for tokenisation, and apply a powerful filter with any combination of rules as long as they can boil down into a lambda.
+
+Out of the box the tokeniser includes only alpha chars. Hyphenated tokens and tokens with apostrophes are considered a single token.
+
+### `#tokenise([pattern: TOKEN_REGEXP, exclude: nil])`
+
+```ruby
+tokeniser = Tokeniser.new("Hello Beirut!").tokenise
+
+# With `exclude`
+tokeniser = Tokeniser.new("Hello Beirut!").tokenise(exclude: "hello")
+
+# With `pattern`
+tokeniser = Tokeniser.new("Hello Beirut!").tokenise(pattern: /[a-z]/i)
+```
+
+See [Excluding tokens from the analyser][5] and [Passing in a custom regexp][6] for more information.
+
+### `Counter`
+
+The `Counter` class allows you to collect various statistics from an array of tokens.
 
 #### `.token_count`
 
-Returns the token count of a given string. The count includes only alpha characters. Hyphenated and tokens with apostrophes are considered a single token. You can pass in your own regular expression if this is not desired behaviour.
+Returns the token count of a given string.
 
 ```ruby
 counter.token_count #=> 15
@@ -185,7 +202,7 @@ Returns the number unique tokens.
 counter.unique_token_count       #=> 13
 ```
 
-## Excluding tokens from the analyser
+## Excluding tokens from the tokeniser
 
 You can exclude anything you want from the input by passing the `exclude` option. The exclude option accepts a variety of filters and is extremely flexible.
 
@@ -311,6 +328,7 @@ See contributors. Not listed there is [Dave Yarwood][1].
 
 
   [1]: http://codereview.stackexchange.com/questions/46105/a-ruby-string-analyser
+  [2]: http://www.rubydoc.info/gems/words_counted
   [4]: http://rubywordcount.com
   [5]: https://github.com/abitdodgy/words_counted#excluding-tokens-from-the-analyser
   [6]: https://github.com/abitdodgy/words_counted#passing-in-a-custom-regexp
