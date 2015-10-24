@@ -19,7 +19,7 @@ Visit [this website][4] for an example of what the gem can do.
     * The longest tokens and their lengths
     * The most frequent tokens and their frequencies.
 * A flexible way to exclude tokens from the tokeniser. You can pass a **string**, **regexp**, **symbol**, **lambda**, or an **array** of any combination of those types for powerful tokenisation strategies.
-* Pass your own regexp rules to the tokeniser if you prefer. The default regexp filters special characters but keeps hyphens and apostrophes. It also plays nicely with diacritics (UTF and unicode characters): "Bayrūt" is treated as `["Bayrūt"]` and not `["Bayr", "ū", "t"]`, for example.
+* Pass your own regexp rules to the tokeniser if you prefer. The default regexp filters special characters but keeps hyphens and apostrophes. It also plays nicely with diacritics (UTF and unicode characters): *Bayrūt* is treated as `["Bayrūt"]` and not `["Bayr", "ū", "t"]`, for example.
 * Opens and reads files. Pass in a file path or a url instead of a string.
 
 See usage instructions for more details.
