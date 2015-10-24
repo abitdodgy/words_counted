@@ -12,7 +12,7 @@ module WordsCounted
 
     describe "#tokenise" do
       it "normalises tokens" do
-        tokens = Tokeniser.new("We Are ALL in the Gutter").tokenise()
+        tokens = Tokeniser.new("We Are ALL in the Gutter").tokenise
         expect(tokens).to eq(%w[we are all in the gutter])
       end
 
@@ -28,7 +28,7 @@ module WordsCounted
         end
 
         it "does not split on hyphens" do
-          tokens = Tokeniser.new("I am twenty-two.").tokenise()
+          tokens = Tokeniser.new("I am twenty-two.").tokenise
           expect(tokens).to eq(%w[i am twenty-two])
         end
 
@@ -38,7 +38,7 @@ module WordsCounted
         end
 
         it "does not split on unicode chars" do
-          tokens = Tokeniser.new("Bayrūt").tokenise()
+          tokens = Tokeniser.new("Bayrūt").tokenise
           expect(tokens).to eq(%w[bayrūt])
         end
       end
@@ -99,13 +99,13 @@ module WordsCounted
           end
 
           it "accepts an array of lambdas" do
-            filters = [->(token) { token.length < 4}, ->(token) { token.length > 6}]
+            filters = [->(token) { token.length < 4 }, ->(token) { token.length > 6 }]
             tokens = Tokeniser.new("That was magnificent, Trevor.").tokenise(exclude: filters)
             expect(tokens).to eq(%w[that trevor])
           end
 
           it "accepts a mixed array" do
-            filters = ["that", ->(token) { token.length < 4}, /magnificent/]
+            filters = ["that", ->(token) { token.length < 4 }, /magnificent/]
             tokens = Tokeniser.new("That was magnificent, Trevor.").tokenise(exclude: filters)
             expect(tokens).to eq(["trevor"])
           end
