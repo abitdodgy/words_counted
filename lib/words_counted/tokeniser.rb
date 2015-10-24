@@ -67,10 +67,10 @@ module WordsCounted
     # @example With `exclude` as a mixed array
     #  t = WordsCounted::Tokeniser.new("Hello! اسماءنا هي محمد، كارولينا، سامي، وداني")
     #  t.tokenise(exclude: [:ascii_only?, /محمد/, ->(t) { t.length > 6}, "و"])
-    #  # => => ["هي", "سامي", "ودان
+    #  # => ["هي", "سامي", "ودان"]
     #
     # @param [Regexp] pattern   The string to tokenise.
-    # @param [Array<String, Regexp, Lambda, Symbol>, String, Regexp, Lambda, Symbol nil] exclude     The filter to apply.
+    # @param [Array<String, Regexp, Lambda, Symbol>, String, Regexp, Lambda, Symbol, nil] exclude     The filter to apply.
     # @return [Array] the array of filtered tokens.
     def tokenise(pattern: TOKEN_REGEXP, exclude: nil)
       filter_proc = filter_to_proc(exclude)
