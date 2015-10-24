@@ -46,9 +46,9 @@ module WordsCounted
       end
 
       context "with `exclude` option" do
-        let(:tokeniser) { Tokeniser.new("That was magnificent, Trevor.") }
-
         context "as a string" do
+          let(:tokeniser) { Tokeniser.new("That was magnificent, Trevor.") }
+
           it "it accepts a string filter" do
             tokens = tokeniser.tokenise(exclude: "magnificent")
             expect(tokens).to eq(%w[that was trevor])
@@ -102,12 +102,8 @@ module WordsCounted
 
           it "accepts an array of lambdas" do
             filters = [
-              ->(token) {
-                token.length < 4
-              },
-              ->(token) {
-                token.length > 6
-              }
+              ->(token) { token.length < 4 },
+              ->(token) { token.length > 6 }
             ]
             tokens = tokeniser.tokenise(exclude: filters)
             expect(tokens).to eq(%w[that trevor])
@@ -116,9 +112,7 @@ module WordsCounted
           it "accepts a mixed array" do
             filters = [
               "that",
-              ->(token) {
-                token.length < 4
-              },
+              ->(token) { token.length < 4 },
               /magnificent/
             ]
             tokens = tokeniser.tokenise(exclude: filters)
