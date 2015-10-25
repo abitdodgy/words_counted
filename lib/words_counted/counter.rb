@@ -1,7 +1,4 @@
 # -*- encoding : utf-8 -*-
-
-require "words_counted/deprecated"
-
 module WordsCounted
   using Refinements::HashRefinements
 
