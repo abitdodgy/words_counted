@@ -1,14 +1,22 @@
 # WordsCounted
 
-WordsCounted is a Ruby NLP (natural language processor). WordsCounted lets you implement powerful tokensation strategies with a very flexible tokeniser class. [Consult the documentation][2] for more information.
+> We are all in the gutter, but some of us are looking at the stars.
+>
+> -- <cite>Oscar Wilde</cite>
+
+WordsCounted is a Ruby NLP (natural language processor). WordsCounted lets you implement powerful tokensation strategies with a very flexible tokeniser class.
+
+**Are you using WordsCounted to do something interesting?** Please [tell me about it][8].
 
 <a href="http://badge.fury.io/rb/words_counted">
   <img src="https://badge.fury.io/rb/words_counted@2x.png" alt="Gem Version" height="18">
 </a>
 
+[RubyDoc documentation][7].
+
 ### Demo
 
-Visit [this website][4] for an example of what the gem can do.
+Visit [this website][4] for one example of what you can do with WordsCounted.
 
 ### Features
 
@@ -21,8 +29,6 @@ Visit [this website][4] for an example of what the gem can do.
 * A flexible way to exclude tokens from the tokeniser. You can pass a **string**, **regexp**, **symbol**, **lambda**, or an **array** of any combination of those types for powerful tokenisation strategies.
 * Pass your own regexp rules to the tokeniser if you prefer. The default regexp filters special characters but keeps hyphens and apostrophes. It also plays nicely with diacritics (UTF and unicode characters): *Bayrūt* is treated as `["Bayrūt"]` and not `["Bayr", "ū", "t"]`, for example.
 * Opens and reads files. Pass in a file path or a url instead of a string.
-
-See usage instructions for more details.
 
 ## Installation
 
@@ -334,3 +340,5 @@ See [contributors][3]. Not listed there is [Dave Yarwood][1].
   [4]: http://rubywordcount.com
   [5]: https://github.com/abitdodgy/words_counted#excluding-tokens-from-the-analyser
   [6]: https://github.com/abitdodgy/words_counted#passing-in-a-custom-regexp
+  [7]: http://www.rubydoc.info/gems/words_counted/
+  [8]: https://github.com/abitdodgy/words_counted/issues/new
