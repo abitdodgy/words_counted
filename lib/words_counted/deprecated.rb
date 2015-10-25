@@ -1,6 +1,8 @@
 # -*- encoding : utf-8 -*-
 module WordsCounted
   module Deprecated
+    # The following methods are deprecated and will be removed in version 1.1.0.
+
     # @deprecated use `Counter#token_count`
     def word_count
       warn "`Counter#word_count` is deprecated, please use `Counter#token_count`"
