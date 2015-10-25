@@ -2,7 +2,7 @@
 
 > We are all in the gutter, but some of us are looking at the stars.
 >
-> -- <cite>Oscar Wilde</cite>
+> -- Oscar Wilde
 
 WordsCounted is a Ruby NLP (natural language processor). WordsCounted lets you implement powerful tokensation strategies with a very flexible tokeniser class.
 
@@ -61,6 +61,8 @@ counter = WordsCounted.from_file("path/or/url/to/my/file.txt")
 
 ## API
 
+### WordsCounted
+
 **`WordsCounted.count(input, options = {})`**
 
 Tokenises input and initializes a `Counter` object with the resulting tokens.
@@ -117,7 +119,7 @@ counter.token_count #=> 15
 
 Returns a sorted (unstable) two-dimensional array where each element is a token and its frequency. The array is sorted by frequency in descending order.
 
-```
+```ruby
 counter.token_frequency
 
 [
@@ -249,7 +251,7 @@ tokeniser = WordsCounted::Tokeniser.new(
 tokeniser.tokenise(
   exclude: [:ascii_only?, /محمد/, ->(t) { t.length > 6}, "و"]
 )
-# => ["هي", "سامي", "ودان"]
+# => ["هي", "سامي", "وداني"]
 ```
 
 ## Passing in a Custom Regexp
