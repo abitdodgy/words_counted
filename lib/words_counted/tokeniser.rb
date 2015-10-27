@@ -5,27 +5,31 @@ module WordsCounted
     # Using `pattern` and `exclude` allows for powerful tokenisation strategies.
     #
     # @example
-    #  tokeniser = WordsCounted::Tokeniser.new("We are all in the gutter, but some of us are looking at the stars.")
+    #  tokeniser
+    #    = WordsCounted::Tokeniser.new(
+    #        "We are all in the gutter, but some of us are looking at the stars."
+    #      )
     #  tokeniser.tokenise(exclude: "We are all in the gutter")
     #  # => ['but', 'some', 'of', 'us', 'are', 'looking', 'at', 'the', 'stars']
 
     # Default tokenisation strategy
     TOKEN_REGEXP = /[\p{Alpha}\-']+/
 
-    # Initialises state with a string that will be tokenised.
+    # Initialises state with the string to be tokenised.
     #
-    # @param [String] input   The string to tokenise.
-    # @return [Tokeniser]
+    # @param [String] input   The string to tokenise
     def initialize(input)
       @input = input
     end
 
     # Converts a string into an array of tokens using a regular expression.
-    # If a regexp is not provided a default one is used. See {Tokenizer.TOKEN_REGEXP}.
+    # If a regexp is not provided a default one is used. See `Tokenizer.TOKEN_REGEXP`.
     #
     # Use `exclude` to remove tokens from the final list. `exclude` can be a string,
     # a regular expression, a lambda, a symbol, or an array of one or more of those types.
     # This allows for powerful and flexible tokenisation strategies.
+    #
+    # If a symbol is passed, it must name a predicate method.
     #
     # @example
     #  WordsCounted::Tokeniser.new("Hello World").tokenise
@@ -44,7 +48,9 @@ module WordsCounted
     #  # => ['dani']
     #
     # @example With `exclude` as a lambda
-    #  WordsCounted::Tokeniser.new("Goodbye Sami").tokenise(exclude: ->(token) { token.length > 6 })
+    #  WordsCounted::Tokeniser.new("Goodbye Sami").tokenise(
+    #    exclude: ->(token) { token.length > 6 }
+    #  )
     #  # => ['sami']
     #
     # @example With `exclude` as a symbol
@@ -52,26 +58,42 @@ module WordsCounted
     #  # => ['محمد']
     #
     # @example With `exclude` as an array of strings
-    #  WordsCounted::Tokeniser.new("Goodbye Sami and hello Dani").tokenise(exclude: ["goodbye hello"])
+    #  WordsCounted::Tokeniser.new("Goodbye Sami and hello Dani").tokenise(
+    #    exclude: ["goodbye hello"]
+    #  )
     #  # => ['sami', 'and', dani']
     #
     # @example With `exclude` as an array of regular expressions
-    #  WordsCounted::Tokeniser.new("Goodbye and hello Dani").tokenise(exclude: [/goodbye/i, /and/i])
+    #  WordsCounted::Tokeniser.new("Goodbye and hello Dani").tokenise(
+    #    exclude: [/goodbye/i, /and/i]
+    #  )
     #  # => ['hello', 'dani']
     #
     # @example With `exclude` as an array of lambdas
     #  t = WordsCounted::Tokeniser.new("Special Agent 007")
-    #  t.tokenise(exclude: [->(t) { t.to_i.odd? }, ->(t) { t.length > 5}])
+    #  t.tokenise(
+    #    exclude: [
+    #      ->(t) { t.to_i.odd? },
+    #      ->(t) { t.length > 5}
+    #    ]
+    #  )
     #  # => ['agent']
     #
     # @example With `exclude` as a mixed array
     #  t = WordsCounted::Tokeniser.new("Hello! اسماءنا هي محمد، كارولينا، سامي، وداني")
-    #  t.tokenise(exclude: [:ascii_only?, /محمد/, ->(t) { t.length > 6}, "و"])
-    #  # => ["هي", "سامي", "ودان"]
+    #  t.tokenise(
+    #    exclude: [
+    #      :ascii_only?,
+    #      /محمد/,
+    #      ->(t) { t.length > 6},
+    #      "و"
+    #    ]
+    #  )
+    #  # => ["هي", "سامي", "وداني"]
     #
-    # @param [Regexp] pattern   The string to tokenise.
-    # @param [Array<String, Regexp, Lambda, Symbol>, String, Regexp, Lambda, Symbol, nil] exclude     The filter to apply.
-    # @return [Array] the array of filtered tokens.
+    # @param [Regexp] pattern   The string to tokenise
+    # @param [Array<String, Regexp, Lambda, Symbol>, String, Regexp, Lambda, Symbol, nil] exclude     The filter to apply
+    # @return [Array] The array of filtered tokens
     def tokenise(pattern: TOKEN_REGEXP, exclude: nil)
       filter_proc = filter_to_proc(exclude)
       @input.scan(pattern).map(&:downcase).reject { |token| filter_proc.call(token) }
@@ -79,22 +101,31 @@ module WordsCounted
 
   private
 
-    # This method converts any arguments into a callable object. The return value of this
-    # is then used to determine whether a token should be excluded from the final list or not.
+    # The following methods convert any arguments into a callable object. The return value of this
+    # lambda is then used to determine whether a token should be excluded from the final list.
     #
     # `filter` can be a string, a regular expression, a lambda, a symbol, or an array
     # of any combination of those types.
     #
-    # If `filter` is a string, see {Tokeniser#filter_proc_from_string}.
-    # If `filter` is a an array, see {Tokeniser#filter_procs_from_array}.
+    # If `filter` is a string, it converts the string into an array, and returns a lambda
+    # that returns true if the token is included in the resulting array.
+    #
+    # @see {Tokeniser#filter_proc_from_string}.
+    #
+    # If `filter` is a an array, it creates a new array where each element of the origingal is
+    # converted to a lambda, and returns a lambda that calls each lambda in the resulting array.
+    # If any lambda returns true the token is excluded from the final list.
+    #
+    # @see {Tokeniser#filter_procs_from_array}.
     #
     # If `filter` is a proc, then the proc is simply called. If `filter` is a regexp, a `lambda`
-    # is returned that checks the token for a match. If a symbol is passed, it is converted to
-    # a proc.
+    # is returned that checks the token for a match.
+    #
+    # If a symbol is passed, it is converted to a proc. The symbol must name a predicate method.
     #
     # This method depends on `nil` responding `to_a` with an empty array, which
     # avoids having to check if `exclude` was passed.
-    #
+
     # @api private
     def filter_to_proc(filter)
       if filter.respond_to?(:to_a)
@@ -113,10 +144,6 @@ module WordsCounted
       end
     end
 
-    # Converts an array of `filters` to an array of lambdas, and returns a lambda that calls
-    # each lambda in the resulting array. If any lambda returns true the token is excluded
-    # from the final list.
-    #
     # @api private
     def filter_procs_from_array(filter)
       filter_procs = Array(filter).map &method(:filter_to_proc)
@@ -125,9 +152,6 @@ module WordsCounted
       }
     end
 
-    # Converts a string `filter` to an array, and returns a lambda
-    # that returns true if the token is included in the array.
-    #
     # @api private
     def filter_proc_from_string(filter)
       normalized_exclusion_list = filter.split.map(&:downcase)

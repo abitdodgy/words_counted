@@ -1,14 +1,22 @@
 # WordsCounted
 
-WordsCounted is a Ruby NLP (natural language processor). WordsCounted lets you implement powerful tokensation strategies with a very flexible tokeniser class. [Consult the documentation][2] for more information.
+> We are all in the gutter, but some of us are looking at the stars.
+>
+> -- Oscar Wilde
+
+WordsCounted is a Ruby NLP (natural language processor). WordsCounted lets you implement powerful tokensation strategies with a very flexible tokeniser class.
+
+**Are you using WordsCounted to do something interesting?** Please [tell me about it][8].
 
 <a href="http://badge.fury.io/rb/words_counted">
   <img src="https://badge.fury.io/rb/words_counted@2x.png" alt="Gem Version" height="18">
 </a>
 
+[RubyDoc documentation][7].
+
 ### Demo
 
-Visit [this website][4] for an example of what the gem can do.
+Visit [this website][4] for one example of what you can do with WordsCounted.
 
 ### Features
 
@@ -21,8 +29,6 @@ Visit [this website][4] for an example of what the gem can do.
 * A flexible way to exclude tokens from the tokeniser. You can pass a **string**, **regexp**, **symbol**, **lambda**, or an **array** of any combination of those types for powerful tokenisation strategies.
 * Pass your own regexp rules to the tokeniser if you prefer. The default regexp filters special characters but keeps hyphens and apostrophes. It also plays nicely with diacritics (UTF and unicode characters): *Bayrūt* is treated as `["Bayrūt"]` and not `["Bayr", "ū", "t"]`, for example.
 * Opens and reads files. Pass in a file path or a url instead of a string.
-
-See usage instructions for more details.
 
 ## Installation
 
@@ -54,6 +60,8 @@ counter = WordsCounted.from_file("path/or/url/to/my/file.txt")
 `.count` and `.from_file` are convenience methods that take an input, tokenise it, and return an instance of `Counter` initialized with the tokens. The `Tokeniser` and `Counter` classes can be used alone, however.
 
 ## API
+
+### WordsCounted
 
 **`WordsCounted.count(input, options = {})`**
 
@@ -111,7 +119,7 @@ counter.token_count #=> 15
 
 Returns a sorted (unstable) two-dimensional array where each element is a token and its frequency. The array is sorted by frequency in descending order.
 
-```
+```ruby
 counter.token_frequency
 
 [
@@ -207,7 +215,7 @@ You can exclude anything you want from the input by passing the `exclude` option
 1. A *space-delimited* string. The filter will normalise the string.
 2. A regular expression.
 3. A lambda.
-4. A symbol that is convertible to a proc.  For example `:odd?`.
+4. A symbol that names a predicate method.  For example `:odd?`.
 5. An array of any combination of the above.
 
 ```ruby
@@ -243,7 +251,7 @@ tokeniser = WordsCounted::Tokeniser.new(
 tokeniser.tokenise(
   exclude: [:ascii_only?, /محمد/, ->(t) { t.length > 6}, "و"]
 )
-# => ["هي", "سامي", "ودان"]
+# => ["هي", "سامي", "وداني"]
 ```
 
 ## Passing in a Custom Regexp
@@ -327,10 +335,11 @@ See [contributors][3]. Not listed there is [Dave Yarwood][1].
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
-
   [1]: http://codereview.stackexchange.com/questions/46105/a-ruby-string-analyser
   [2]: http://www.rubydoc.info/gems/words_counted
   [3]: https://github.com/abitdodgy/words_counted/graphs/contributors
   [4]: http://rubywordcount.com
   [5]: https://github.com/abitdodgy/words_counted#excluding-tokens-from-the-analyser
   [6]: https://github.com/abitdodgy/words_counted#passing-in-a-custom-regexp
+  [7]: http://www.rubydoc.info/gems/words_counted/
+  [8]: https://github.com/abitdodgy/words_counted/issues/new
