@@ -29,6 +29,8 @@ module WordsCounted
     # a regular expression, a lambda, a symbol, or an array of one or more of those types.
     # This allows for powerful and flexible tokenisation strategies.
     #
+    # If a symbol is passed, it must name a predicate method.
+    #
     # @example
     #  WordsCounted::Tokeniser.new("Hello World").tokenise
     #  # => ['hello', 'world']
@@ -117,8 +119,9 @@ module WordsCounted
     # @see {Tokeniser#filter_procs_from_array}.
     #
     # If `filter` is a proc, then the proc is simply called. If `filter` is a regexp, a `lambda`
-    # is returned that checks the token for a match. If a symbol is passed, it is converted to
-    # a proc.
+    # is returned that checks the token for a match.
+    #
+    # If a symbol is passed, it is converted to a proc. The symbol must name a predicate method.
     #
     # This method depends on `nil` responding `to_a` with an empty array, which
     # avoids having to check if `exclude` was passed.

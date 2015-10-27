@@ -215,7 +215,7 @@ You can exclude anything you want from the input by passing the `exclude` option
 1. A *space-delimited* string. The filter will normalise the string.
 2. A regular expression.
 3. A lambda.
-4. A symbol that is convertible to a proc.  For example `:odd?`.
+4. A symbol that names a predicate method.  For example `:odd?`.
 5. An array of any combination of the above.
 
 ```ruby
@@ -334,7 +334,6 @@ See [contributors][3]. Not listed there is [Dave Yarwood][1].
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
-
 
   [1]: http://codereview.stackexchange.com/questions/46105/a-ruby-string-analyser
   [2]: http://www.rubydoc.info/gems/words_counted
