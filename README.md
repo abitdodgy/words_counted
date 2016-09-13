@@ -57,7 +57,7 @@ counter = WordsCounted.count(
 counter = WordsCounted.from_file("path/or/url/to/my/file.txt")
 ```
 
-`.count` and `.from_file` are convenience methods that take an input, tokenise it, and return an instance of `Counter` initialized with the tokens. The `Tokeniser` and `Counter` classes can be used alone, however.
+`.count` and `.from_file` are convenience methods that take an input, tokenise it, and return an instance of `WordsCounted::Counter` initialized with the tokens. The `WordsCounted::Tokeniser` and `WordsCounted::Counter` classes can be used alone, however.
 
 ## API
 
@@ -65,7 +65,7 @@ counter = WordsCounted.from_file("path/or/url/to/my/file.txt")
 
 **`WordsCounted.count(input, options = {})`**
 
-Tokenises input and initializes a `Counter` object with the resulting tokens.
+Tokenises input and initializes a `WordsCounted::Counter` object with the resulting tokens.
 
 ```ruby
 counter = WordsCounted.count("Hello Beirut!")
@@ -75,7 +75,7 @@ Accepts two options: `exclude` and `regexp`. See [Excluding tokens from the anal
 
 **`WordsCounted.from_file(path, options = {})`**
 
-Reads and tokenises a file, and initializes a `Counter` object with the resulting tokens.
+Reads and tokenises a file, and initializes a `WordsCounted::Counter` object with the resulting tokens.
 
 ```ruby
 counter = WordsCounted.count("hello_beirut.txt")
@@ -92,20 +92,20 @@ Out of the box the tokeniser includes only alpha chars. Hyphenated tokens and to
 **`#tokenise([pattern: TOKEN_REGEXP, exclude: nil])`**
 
 ```ruby
-tokeniser = Tokeniser.new("Hello Beirut!").tokenise
+tokeniser = WordsCounted::Tokeniser.new("Hello Beirut!").tokenise
 
 # With `exclude`
-tokeniser = Tokeniser.new("Hello Beirut!").tokenise(exclude: "hello")
+tokeniser = WordsCounted::Tokeniser.new("Hello Beirut!").tokenise(exclude: "hello")
 
 # With `pattern`
-tokeniser = Tokeniser.new("I <3 Beirut!").tokenise(pattern: /[a-z]/i)
+tokeniser = WordsCounted::Tokeniser.new("I <3 Beirut!").tokenise(pattern: /[a-z]/i)
 ```
 
 See [Excluding tokens from the analyser][5] and [Passing in a custom regexp][6] for more information.
 
 ### Counter
 
-The `Counter` class allows you to collect various statistics from an array of tokens.
+The `WordsCounted::Counter` class allows you to collect various statistics from an array of tokens.
 
 **`#token_count`**
 
@@ -221,22 +221,19 @@ You can exclude anything you want from the input by passing the `exclude` option
 ```ruby
 tokeniser =
   WordsCounted::Tokeniser.new(
-    "Magnificent! That was magnificent, Trevor.", exclude: "was magnificent"
+    "Magnificent! That was magnificent, Trevor."
   )
 
 # Using a string
 tokeniser.tokenise(exclude: "was magnificent")
-tokeniser.tokens
 # => ["that", "trevor"]
 
 # Using a regular expression
 tokeniser.tokenise(exclude: /Trevor/)
-counter.tokens
 # => ["that", "was", "magnificent"]
 
 # Using a lambda
 tokeniser.tokenise(exclude: ->(t) { t.length < 4 })
-counter.tokens
 # => ["magnificent", "trevor"]
 
 # Using symbol
