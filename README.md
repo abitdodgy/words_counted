@@ -264,7 +264,7 @@ You can pass your own criteria as a Ruby regular expression to split your string
 For example, if you wanted to include numbers, you can override the regular expression:
 
 ```ruby
-counter = WordsCounted.count("Numbers 1, 2, and 3", regexp: /[\p{Alnum}\-']+/)
+counter = WordsCounted.count("Numbers 1, 2, and 3", pattern: /[\p{Alnum}\-']+/)
 counter.tokens
 #=> ["Numbers", "1", "2", "and", "3"]
 ```
