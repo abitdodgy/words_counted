@@ -23,7 +23,7 @@ module WordsCounted
   # @param [Hash] options   The options to pass onto `Counter`
   # @return [WordsCounted::Counter] An instance of Counter
   def self.count(input, options = {})
-    tokens = Tokeniser.new(input).tokenise(options)
+    tokens = Tokeniser.new(input).tokenise(**options)
     Counter.new(tokens)
   end
 
@@ -38,7 +38,7 @@ module WordsCounted
   # @return [WordsCounted::Counter] An instance of Counter
   def self.from_file(path, options = {})
     tokens = File.open(path) do |file|
-      Tokeniser.new(file.read).tokenise(options)
+      Tokeniser.new(file.read).tokenise(**options)
     end
     Counter.new(tokens)
   end
