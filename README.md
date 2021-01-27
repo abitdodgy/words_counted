@@ -78,7 +78,7 @@ Accepts two options: `exclude` and `regexp`. See [Excluding tokens from the anal
 Reads and tokenises a file, and initializes a `WordsCounted::Counter` object with the resulting tokens.
 
 ```ruby
-counter = WordsCounted.count("hello_beirut.txt")
+counter = WordsCounted.from_file("hello_beirut.txt")
 ````
 
 Accepts the same options as `.count`.
@@ -200,12 +200,12 @@ Returns the average char count per token rounded to two decimal places. Accepts 
 counter.average_chars_per_token #=> 4
 ```
 
-**`#unique_token_count`**
+**`#uniq_token_count`**
 
-Returns the number unique tokens.
+Returns the number of unique tokens.
 
 ```ruby
-counter.unique_token_count #=> 13
+counter.uniq_token_count #=> 13
 ```
 
 ## Excluding tokens from the tokeniser
@@ -229,16 +229,16 @@ tokeniser.tokenise(exclude: "was magnificent")
 # => ["that", "trevor"]
 
 # Using a regular expression
-tokeniser.tokenise(exclude: /Trevor/)
-# => ["that", "was", "magnificent"]
+tokeniser.tokenise(exclude: /trevor/)
+# => ["magnificent", "that", "was", "magnificent"]
 
 # Using a lambda
 tokeniser.tokenise(exclude: ->(t) { t.length < 4 })
-# => ["magnificent", "trevor"]
+# => ["magnificent", "that", "magnificent", "trevor"]
 
 # Using symbol
 tokeniser = WordsCounted::Tokeniser.new("Hello! محمد")
-t.tokenise(exclude: :ascii_only?)
+tokeniser.tokenise(exclude: :ascii_only?)
 # => ["محمد"]
 
 # Using an array
@@ -266,7 +266,7 @@ For example, if you wanted to include numbers, you can override the regular expr
 ```ruby
 counter = WordsCounted.count("Numbers 1, 2, and 3", pattern: /[\p{Alnum}\-']+/)
 counter.tokens
-#=> ["Numbers", "1", "2", "and", "3"]
+#=> ["numbers", "1", "2", "and", "3"]
 ```
 
 ## Opening and Reading Files
