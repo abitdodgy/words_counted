@@ -251,7 +251,7 @@ tokeniser.tokenise(
 # => ["هي", "سامي", "وداني"]
 ```
 
-## Passing in a Custom Regexp
+## Passing in a custom regexp
 
 The default regexp accounts for letters, hyphenated tokens, and apostrophes. This means *twenty-one* is treated as one token. So is *Mohamad's*.
 
@@ -269,7 +269,7 @@ counter.tokens
 #=> ["numbers", "1", "2", "and", "3"]
 ```
 
-## Opening and Reading Files
+## Opening and reading files
 
 Use the `from_file` method to open files. `from_file` accepts the same options as `.count`. The file path can be a URL.
 
@@ -301,7 +301,7 @@ In this example `-you` and `you` are separate tokens. Also, the tokeniser does n
 
 The program will normalise (downcase) all incoming strings for consistency and filters.
 
-## Road Map
+## Roadmap
 
 1. Add ability to open URLs.
 2. Add Ngram support.
@@ -316,10 +316,6 @@ def self.from_url
 end
 ```
 
-## About
-
-Originally I wrote this program for a code challenge on Treehouse. You can find the original implementation on [Code Review][1].
-
 ## Contributors
 
 See [contributors][3]. Not listed there is [Dave Yarwood][1].
@@ -332,7 +328,6 @@ See [contributors][3]. Not listed there is [Dave Yarwood][1].
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
-  [1]: http://codereview.stackexchange.com/questions/46105/a-ruby-string-analyser
   [2]: http://www.rubydoc.info/gems/words_counted
   [3]: https://github.com/abitdodgy/words_counted/graphs/contributors
   [4]: http://rubywordcount.com
