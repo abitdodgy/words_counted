@@ -1,3 +1,8 @@
+## Version 1.0.3
+
+1. Adds support for Ruby 3.0.0.
+2. Improve documentation and adds newer configs to Travis CI and Hound.
+
 ## Version 1.0
 
 This version brings lots of improvements to code organisation. The tokeniser has been extracted into its own class. All methods in `Counter` have either renamed or deprecated. Deprecated methods and their tests have moved into their own modules. Using them will trigger warnings with upgrade instructions outlined below.
