@@ -303,12 +303,7 @@ The program will normalise (downcase) all incoming strings for consistency and f
 
 ## Roadmap
 
-1. Add ability to open URLs.
-2. Add Ngram support.
-
-#### Ability to read URLs
-
-Something like...
+### Ability to open URLs
 
 ```ruby
 def self.from_url
