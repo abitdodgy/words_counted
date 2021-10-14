@@ -313,7 +313,7 @@ end
 
 ## Contributors
 
-See [contributors][3]. Not listed there is [Dave Yarwood][1].
+See [contributors][3].
 
 ## Contributing
 
